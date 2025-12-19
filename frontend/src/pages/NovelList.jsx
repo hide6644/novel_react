@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -15,16 +15,11 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    MenuItem,
-    Select,
-    FormControl,
-    InputLabel,
     Pagination,
     Autocomplete
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
 import PageHeader from '../components/common/PageHeader';
@@ -143,7 +138,7 @@ const NovelList = () => {
 
             <Card sx={{ mb: 4, p: 2 }}>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={5}>
+                    <Grid size={{ xs: 12, sm: 5 }}>
                         <TextField
                             fullWidth
                             label={t('search.title')}
@@ -152,7 +147,7 @@ const NovelList = () => {
                             size="small"
                         />
                     </Grid>
-                    <Grid item xs={12} sm={5}>
+                    <Grid size={{ xs: 12, sm: 5 }}>
                         <TextField
                             fullWidth
                             label={t('search.author')}
@@ -161,7 +156,7 @@ const NovelList = () => {
                             size="small"
                         />
                     </Grid>
-                    <Grid item xs={12} sm={2}>
+                    <Grid size={{ xs: 12, sm: 2 }}>
                         <Button fullWidth variant="contained" startIcon={<SearchIcon />} onClick={handleSearch}>
                             {t('btn.search')}
                         </Button>
@@ -171,7 +166,7 @@ const NovelList = () => {
 
             <Grid container spacing={3}>
                 {novels.map(novel => (
-                    <Grid item xs={12} sm={6} md={4} key={novel.id}>
+                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={novel.id}>
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flexGrow: 1 }}>
                                 <Typography variant="h5" component="div" gutterBottom>

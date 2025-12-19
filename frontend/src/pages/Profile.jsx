@@ -68,11 +68,11 @@ const Profile = () => {
                     )}
                     <Box component="form" onSubmit={handleProfileUpdate}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Typography variant="subtitle2" color="text.secondary">{t('label.username')}</Typography>
                                 <Typography variant="h6">{user.username}</Typography>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <TextField
                                     fullWidth
                                     label={t('label.lastName')}
@@ -80,7 +80,7 @@ const Profile = () => {
                                     onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <TextField
                                     fullWidth
                                     label={t('label.firstName')}
@@ -88,15 +88,15 @@ const Profile = () => {
                                     onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Typography variant="subtitle2" color="text.secondary">{t('label.role')}</Typography>
                                 <Typography variant="body1">{user.role}</Typography>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Typography variant="subtitle2" color="text.secondary">{t('label.expiryDate')}</Typography>
                                 <Typography variant="body1">{user.expiryDate}</Typography>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Button type="submit" variant="contained">
                                     {t('btn.save')}
                                 </Button>
