@@ -5,9 +5,10 @@ import com.example.novel.dto.UserDto;
 import com.example.novel.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.lang.NonNull;
 import java.util.List;
 
 @RestController

@@ -4,7 +4,7 @@ import com.example.novel.dto.UserCreateDto;
 import com.example.novel.dto.UserDto;
 import java.util.List;
 
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 
 public interface UserService {
     List<UserDto> getAllUsers();

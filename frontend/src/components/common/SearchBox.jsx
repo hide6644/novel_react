@@ -1,7 +1,7 @@
 import { Card, Grid, TextField, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const SearchBox = ({ value, onChange, onSearch, placeholder, label }) => {
+const SearchBox = ({ value, onChange, onSearch, placeholder, label, buttonLabel }) => {
     return (
         <Card sx={{ mb: 4, p: 2 }}>
             <Grid container spacing={2} alignItems="center">
@@ -17,7 +17,7 @@ const SearchBox = ({ value, onChange, onSearch, placeholder, label }) => {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 2 }}>
                     <Button fullWidth variant="contained" startIcon={<SearchIcon />} onClick={onSearch}>
-                        Search
+                        {buttonLabel}
                     </Button>
                 </Grid>
             </Grid>

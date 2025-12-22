@@ -128,6 +128,7 @@ const AuthorList = () => {
                 onChange={e => setSearchQuery(e.target.value)}
                 onSearch={handleSearch}
                 label={t('search.author')}
+                buttonLabel={t('btn.search')}
             />
 
             <TableContainer component={Paper}>

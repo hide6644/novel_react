@@ -5,11 +5,12 @@ import com.example.novel.dto.AuthorDto;
 import com.example.novel.entity.Author;
 import com.example.novel.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.lang.NonNull;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
