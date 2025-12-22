@@ -10,9 +10,11 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class NovelService {
     public NovelDto createNovel(NovelCreateDto dto) {
         Long authorId = Objects.requireNonNull(dto.authorId(), "Author ID must not be null");
         Author author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new IllegalArgumentException("Author not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
 
         Novel novel = new Novel();
         novel.setTitle(dto.title());
@@ -48,11 +50,11 @@ public class NovelService {
 
     public NovelDto updateNovel(@NonNull Long id, NovelCreateDto dto) {
         Novel novel = novelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Novel not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
 
         Long authorId = Objects.requireNonNull(dto.authorId(), "Author ID must not be null");
         Author author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new IllegalArgumentException("Author not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
 
         novel.setTitle(dto.title());
         novel.setDescription(dto.description());
@@ -68,7 +70,7 @@ public class NovelService {
 
     public NovelDto getNovel(@NonNull Long id) {
         Novel novel = novelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Novel not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
         return toDto(novel);
     }
 

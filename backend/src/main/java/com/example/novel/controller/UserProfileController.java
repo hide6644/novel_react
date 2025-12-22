@@ -2,7 +2,9 @@ package com.example.novel.controller;
 
 import com.example.novel.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -20,10 +22,10 @@ public class UserProfileController {
         String newPassword = payload.get("password");
 
         if (newPassword == null || newPassword.isBlank()) {
-            throw new IllegalArgumentException("Password cannot be empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password cannot be empty");
         }
         if (oldPassword == null || oldPassword.isBlank()) {
-            throw new IllegalArgumentException("Old password cannot be empty");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password cannot be empty");
         }
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

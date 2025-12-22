@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -43,7 +43,7 @@ const AuthorList = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [currentAuthor, setCurrentAuthor] = useState({ name: '', nationality: '', birthDate: '' });
 
-    const fetchAuthors = async () => {
+    const fetchAuthors = useCallback(async () => {
         try {
             // If searching, we might use the search endpoint which returns a List, or need to support pagination on search.
             // Backend Controller: search returns List, page returns Page. 
@@ -67,11 +67,11 @@ const AuthorList = () => {
         } catch (error) {
             console.error(error);
         }
-    };
+    }, [page, pageSize, searchQuery]);
 
     useEffect(() => {
         fetchAuthors();
-    }, [page]); // Re-fetch on page change
+    }, [fetchAuthors]); // Re-fetch on page change
 
     const handleSearch = () => {
         setPage(1);

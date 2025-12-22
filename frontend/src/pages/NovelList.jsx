@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -41,7 +41,7 @@ const NovelList = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [pageSize] = useState(10); // Fixed page size or make it selectable
 
-    const fetchNovels = async () => {
+    const fetchNovels = useCallback(async () => {
         try {
             const params = {
                 page: page - 1, // backend is 0-indexed
@@ -56,9 +56,9 @@ const NovelList = () => {
         } catch (error) {
             console.error(error);
         }
-    };
+    }, [page, pageSize, title, author]);
 
-    const fetchAuthors = async (query = '') => {
+    const fetchAuthors = useCallback(async (query = '') => {
         try {
             const params = query ? { name: query } : {};
             const res = await api.get('/authors', { params });
@@ -66,15 +66,15 @@ const NovelList = () => {
         } catch (error) {
             console.error(error);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchNovels();
-    }, [page]); // Re-fetch when page changes
+    }, [fetchNovels]); // Re-fetch when fetchNovels (and its dependencies) change
 
     useEffect(() => {
         fetchAuthors();
-    }, []);
+    }, [fetchAuthors]);
 
     const handleSearch = () => {
         if (page === 1) {

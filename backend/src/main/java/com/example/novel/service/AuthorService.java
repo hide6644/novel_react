@@ -7,8 +7,10 @@ import com.example.novel.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.lang.NonNull;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +46,7 @@ public class AuthorService {
 
     public AuthorDto updateAuthor(@NonNull Long id, AuthorCreateDto dto) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
         author.setName(dto.name());
         author.setBirthDate(dto.birthDate());
         author.setNationality(dto.nationality());
@@ -57,7 +59,7 @@ public class AuthorService {
 
     public AuthorDto getAuthor(@NonNull Long id) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Author not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
         return toDto(author);
     }
 

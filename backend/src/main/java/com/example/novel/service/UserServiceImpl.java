@@ -59,7 +59,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(@NonNull Long id, UserCreateDto dto) {
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         // For update, typically we might not change username or password here, but
         // simplified:
         // If password is provided and not empty, update it.
@@ -84,14 +85,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getCurrentUser(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         return toDto(user);
     }
 
     @Override
     public void changePassword(String username, String oldPassword, String newPassword) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid old password");
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateProfile(String username, com.example.novel.dto.UserProfileUpdateDto dto) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         user.setFirstName(dto.firstName());
         user.setLastName(dto.lastName());
         return toDto(userRepository.save(user));
