@@ -1,0 +1,22 @@
+export const profile = {
+    "profile.title": "My Profile",
+    "profile.changePassword": "Change Password",
+    "profile.newPassword": "New Password",
+    "btn.updatePassword": "Update Password",
+    "msg.passwordUpdated": "Password updated successfully!",
+    "msg.passwordUpdateFailed": "Failed to update password.",
+    "title.changePassword": "Change Password",
+    "error.passwordMismatch": "Passwords do not match",
+    "success.passwordChanged": "Password changed successfully",
+    "error.changePasswordFailed": "Failed to change password",
+    "label.currentPassword": "Current Password",
+    "label.newPassword": "New Password",
+    "label.confirmPassword": "Confirm New Password",
+    "btn.changePassword": "Change Password",
+    "label.firstName": "First Name",
+    "label.lastName": "Last Name",
+    "label.expiryDate": "Expiry Date",
+    "heading.profileDetails": "Profile Details",
+    "msg.profileUpdated": "Profile updated successfully!",
+    "msg.profileUpdateFailed": "Failed to update profile."
+};

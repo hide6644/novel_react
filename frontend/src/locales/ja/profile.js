@@ -1,0 +1,22 @@
+export const profile = {
+    "profile.title": "マイプロフィール",
+    "profile.changePassword": "パスワード変更",
+    "profile.newPassword": "新しいパスワード",
+    "btn.updatePassword": "パスワード更新",
+    "msg.passwordUpdated": "パスワードを更新しました！",
+    "msg.passwordUpdateFailed": "パスワードの更新に失敗しました。",
+    "title.changePassword": "パスワード変更",
+    "error.passwordMismatch": "パスワードが一致しません",
+    "success.passwordChanged": "パスワードを変更しました",
+    "error.changePasswordFailed": "パスワードの変更に失敗しました",
+    "label.currentPassword": "現在のパスワード",
+    "label.newPassword": "新しいパスワード",
+    "label.confirmPassword": "新しいパスワード（確認）",
+    "btn.changePassword": "パスワード変更",
+    "label.firstName": "名",
+    "label.lastName": "姓",
+    "label.expiryDate": "有効期限",
+    "heading.profileDetails": "プロフィール詳細",
+    "msg.profileUpdated": "プロフィールを更新しました！",
+    "msg.profileUpdateFailed": "プロフィールの更新に失敗しました。"
+};
