@@ -9,7 +9,6 @@ import com.example.novel.repository.NovelRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,7 @@ public class NovelService {
                 .map(this::toDto);
     }
 
-    public Page<NovelDto> getAllNovels(@NonNull Pageable pageable) {
+    public Page<NovelDto> getAllNovels(Pageable pageable) {
         return novelRepository.findAll(pageable)
                 .map(this::toDto);
     }
@@ -49,7 +48,7 @@ public class NovelService {
         return toDto(novelRepository.save(novel));
     }
 
-    public NovelDto updateNovel(@NonNull Long id, NovelCreateDto dto) {
+    public NovelDto updateNovel(Long id, NovelCreateDto dto) {
         Novel novel = novelRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
 
@@ -65,11 +64,11 @@ public class NovelService {
         return toDto(novelRepository.save(novel));
     }
 
-    public void deleteNovel(@NonNull Long id) {
+    public void deleteNovel(Long id) {
         novelRepository.deleteById(id);
     }
 
-    public NovelDto getNovel(@NonNull Long id) {
+    public NovelDto getNovel(Long id) {
         Novel novel = novelRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
         return toDto(novel);

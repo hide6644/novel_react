@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme';
@@ -33,30 +35,42 @@ const Layout = () => {
     );
 };
 
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 1000 * 60 * 5, // 5 minutes
+            retry: 1,
+        },
+    },
+});
+
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <AuthProvider>
-                <Router>
-                    <Routes>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/change-password" element={<ChangePassword />} />
+            <QueryClientProvider client={queryClient}>
+                <AuthProvider>
+                    <Router>
+                        <Routes>
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/change-password" element={<ChangePassword />} />
 
-                        <Route element={<Layout />}>
-                            <Route element={<ProtectedRoute />}>
-                                <Route path="/" element={<NovelList />} />
-                                <Route path="/authors" element={<AuthorList />} />
-                                <Route path="/profile" element={<Profile />} />
-                            </Route>
+                            <Route element={<Layout />}>
+                                <Route element={<ProtectedRoute />}>
+                                    <Route path="/" element={<NovelList />} />
+                                    <Route path="/authors" element={<AuthorList />} />
+                                    <Route path="/profile" element={<Profile />} />
+                                </Route>
 
-                            <Route element={<ProtectedRoute roles={['ADMIN']} />}>
-                                <Route path="/admin/users" element={<AdminUserList />} />
+                                <Route element={<ProtectedRoute roles={['ADMIN']} />}>
+                                    <Route path="/admin/users" element={<AdminUserList />} />
+                                </Route>
                             </Route>
-                        </Route>
-                    </Routes>
-                </Router>
-            </AuthProvider>
+                        </Routes>
+                    </Router>
+                </AuthProvider>
+                <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
         </ThemeProvider>
     );
 }

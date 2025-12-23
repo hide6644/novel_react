@@ -6,7 +6,6 @@ import com.example.novel.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -29,12 +28,12 @@ public class AuthorController {
     }
 
     @GetMapping("/page")
-    public Page<AuthorDto> getAuthorsPaginated(@PageableDefault(size = 10) @NonNull Pageable pageable) {
+    public Page<AuthorDto> getAuthorsPaginated(@PageableDefault(size = 10) Pageable pageable) {
         return authorService.getAllAuthors(pageable);
     }
 
     @GetMapping("/{id}")
-    public AuthorDto getAuthor(@PathVariable @NonNull Long id) {
+    public AuthorDto getAuthor(@PathVariable Long id) {
         return authorService.getAuthor(id);
     }
 
@@ -46,13 +45,13 @@ public class AuthorController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public AuthorDto updateAuthor(@PathVariable @NonNull Long id, @RequestBody @Valid AuthorCreateDto dto) {
+    public AuthorDto updateAuthor(@PathVariable Long id, @RequestBody @Valid AuthorCreateDto dto) {
         return authorService.updateAuthor(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteAuthor(@PathVariable @NonNull Long id) {
+    public void deleteAuthor(@PathVariable Long id) {
         authorService.deleteAuthor(id);
     }
 }

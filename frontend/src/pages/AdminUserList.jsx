@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
 import {
     Box,
@@ -28,55 +29,57 @@ import { useTranslation } from 'react-i18next';
 import PageHeader from '../components/common/PageHeader';
 
 const AdminUserList = () => {
-    const [users, setUsers] = useState([]);
+    const queryClient = useQueryClient();
+    const { t } = useTranslation();
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [currentUser, setCurrentUser] = useState({ username: '', password: '', role: 'USER', expiryDate: '', firstName: '', lastName: '' });
-    const { t } = useTranslation();
 
-    const fetchUsers = async () => {
-        try {
+    const { data: users = [], isLoading: usersLoading } = useQuery({
+        queryKey: ['admin-users'],
+        queryFn: async () => {
             const res = await api.get('/admin/users');
-            setUsers(res.data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+            return res.data;
+        },
+    });
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
+    const deleteMutation = useMutation({
+        mutationFn: (id) => api.delete(`/admin/users/${id}`),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+        },
+    });
 
-    const handleDelete = async (id) => {
-        if (!window.confirm(t('novel.deleteConfirm'))) return;
-        try {
-            await api.delete(`/admin/users/${id}`);
-            fetchUsers();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const handleSave = async (e) => {
-        e.preventDefault();
-        try {
+    const saveMutation = useMutation({
+        mutationFn: (user) => {
             if (isEdit) {
-                const payload = { ...currentUser };
+                const payload = { ...user };
                 if (!payload.password) delete payload.password;
-
-                await api.put(`/admin/users/${currentUser.id}`, payload);
-            } else {
-                await api.post('/admin/users', currentUser);
+                return api.put(`/admin/users/${user.id}`, payload);
             }
+            return api.post('/admin/users', user);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['admin-users'] });
             setShowModal(false);
-            fetchUsers();
-        } catch (error) {
+        },
+        onError: (error) => {
             if (error.response && error.response.status === 409) {
                 alert(t('error.usernameExists'));
             } else {
                 alert(t('error.opFailed'));
             }
         }
+    });
+
+    const handleDelete = (id) => {
+        if (!window.confirm(t('novel.deleteConfirm'))) return;
+        deleteMutation.mutate(id);
+    };
+
+    const handleSave = (e) => {
+        e.preventDefault();
+        saveMutation.mutate(currentUser);
     };
 
     const openModal = (user = null) => {
@@ -115,7 +118,13 @@ const AdminUserList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.map((row) => (
+                        {usersLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={7} align="center">
+                                    {t('common.loading') || 'Loading...'}
+                                </TableCell>
+                            </TableRow>
+                        ) : users.map((row) => (
                             <TableRow key={row.id}>
                                 <TableCell>{row.id}</TableCell>
                                 <TableCell>{row.username}</TableCell>

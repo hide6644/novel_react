@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -27,15 +28,12 @@ import SearchBox from '../components/common/SearchBox';
 
 const AuthorList = () => {
     const { user } = useAuth();
+    const queryClient = useQueryClient();
     const { t } = useTranslation();
-    const [authors, setAuthors] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [appliedSearch, setAppliedSearch] = useState('');
 
-    // Pagination (Client-side for now as per backend list endpoint, or switch to server-side if using page endpoint. 
-    // Plan said "List authors with pagination". Backend has /api/authors (list) and /api/authors/page (page). 
-    // Let's use /api/authors/page for scalability matching novels)
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
     const [pageSize] = useState(10);
 
     // Modal
@@ -43,64 +41,61 @@ const AuthorList = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [currentAuthor, setCurrentAuthor] = useState({ name: '', nationality: '', birthDate: '' });
 
-    const fetchAuthors = useCallback(async () => {
-        try {
-            // If searching, we might use the search endpoint which returns a List, or need to support pagination on search.
-            // Backend Controller: search returns List, page returns Page. 
-            // Let's stick to /api/authors/page for main list, and if search is active, maybe client-side or switch endpoint?
-            // The Search endpoint /api/authors?name=.. returns List. 
-            // For consistency and ease, let's use the page endpoint for default, and if search is present, use search endpoint (and maybe disable backend pagination or client-side paginate the result).
-            // Actually, for large datasets, search should also be paginated. But currently backend search returns List.
-            // Let's implement logic: 
-            // If searchQuery: use /api/authors?name=... (List) -> client side pagination or just show all
-            // Else: use /api/authors/page (Page)
-
-            if (searchQuery) {
-                const res = await api.get('/authors', { params: { name: searchQuery } });
-                setAuthors(res.data);
-                setTotalPages(1); // Search results not paginated in backend yet
-            } else {
-                const res = await api.get('/authors/page', { params: { page: page - 1, size: pageSize } });
-                setAuthors(res.data.content);
-                setTotalPages(res.data.totalPages);
+    const { data: authorsData, isLoading: authorsLoading } = useQuery({
+        queryKey: ['authors', page, pageSize, appliedSearch],
+        queryFn: async () => {
+            if (appliedSearch) {
+                const res = await api.get('/authors', { params: { name: appliedSearch } });
+                // If backend search returns a List, we wrap it into a Page-like structure for the UI
+                return {
+                    content: res.data,
+                    totalPages: 1
+                };
             }
-        } catch (error) {
-            console.error(error);
-        }
-    }, [page, pageSize, searchQuery]);
+            const res = await api.get('/authors/page', { params: { page: page - 1, size: pageSize } });
+            return res.data;
+        },
+    });
 
-    useEffect(() => {
-        fetchAuthors();
-    }, [fetchAuthors]); // Re-fetch on page change
-
-    const handleSearch = () => {
-        setPage(1);
-        fetchAuthors();
-    };
-
-    const handleDelete = async (id) => {
-        if (!window.confirm(t('confirm.delete'))) return;
-        try {
-            await api.delete(`/authors/${id}`);
-            fetchAuthors();
-        } catch (error) {
+    const deleteMutation = useMutation({
+        mutationFn: (id) => api.delete(`/authors/${id}`),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['authors'] });
+        },
+        onError: () => {
             alert(t('error.deleteFailed'));
         }
-    };
+    });
 
-    const handleSave = async (e) => {
-        e.preventDefault();
-        try {
+    const saveMutation = useMutation({
+        mutationFn: (author) => {
             if (isEdit) {
-                await api.put(`/authors/${currentAuthor.id}`, currentAuthor);
-            } else {
-                await api.post('/authors', currentAuthor);
+                return api.put(`/authors/${author.id}`, author);
             }
+            return api.post('/authors', author);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['authors'] });
             setShowModal(false);
-            fetchAuthors();
-        } catch (error) {
+        },
+        onError: () => {
             alert(t('error.opFailed'));
         }
+    });
+
+    const handleSearch = () => {
+        setAppliedSearch(searchQuery);
+        setPage(1);
+    };
+
+    const handleDelete = (id) => {
+        if (!window.confirm(t('confirm.delete'))) return;
+        deleteMutation.mutate(id);
+    };
+
+    const handleSave = (e) => {
+        e.preventDefault();
+        saveMutation.mutate(currentAuthor);
     };
 
     const openModal = (author = null) => {
@@ -113,6 +108,9 @@ const AuthorList = () => {
         }
         setShowModal(true);
     };
+
+    const authors = authorsData?.content || [];
+    const totalPages = authorsData?.totalPages || 0;
 
     return (
         <Box>
@@ -143,7 +141,13 @@ const AuthorList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {authors.map((author) => (
+                        {authorsLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={user?.role === 'ADMIN' ? 5 : 4} align="center">
+                                    {t('common.loading') || 'Loading...'}
+                                </TableCell>
+                            </TableRow>
+                        ) : authors.map((author) => (
                             <TableRow key={author.id}>
                                 <TableCell>{author.id}</TableCell>
                                 <TableCell>{author.name}</TableCell>

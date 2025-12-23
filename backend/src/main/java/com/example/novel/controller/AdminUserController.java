@@ -6,7 +6,6 @@ import com.example.novel.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -29,12 +28,12 @@ public class AdminUserController {
     }
 
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable @NonNull Long id, @RequestBody UserCreateDto dto) {
+    public UserDto updateUser(@PathVariable Long id, @RequestBody UserCreateDto dto) {
         return userService.updateUser(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable @NonNull Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
     }

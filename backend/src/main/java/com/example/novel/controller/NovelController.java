@@ -6,7 +6,6 @@ import com.example.novel.service.NovelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,7 +23,7 @@ public class NovelController {
     @GetMapping
     public Page<NovelDto> search(@RequestParam(required = false) String title,
             @RequestParam(required = false) String author,
-            @PageableDefault(size = 10) @NonNull Pageable pageable) {
+            @PageableDefault(size = 10) Pageable pageable) {
         if (title == null && author == null) {
             return novelService.getAllNovels(pageable);
         }
@@ -32,7 +31,7 @@ public class NovelController {
     }
 
     @GetMapping("/{id}")
-    public NovelDto getNovel(@PathVariable @NonNull Long id) {
+    public NovelDto getNovel(@PathVariable Long id) {
         return novelService.getNovel(id);
     }
 
@@ -44,13 +43,13 @@ public class NovelController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public NovelDto updateNovel(@PathVariable @NonNull Long id, @RequestBody @Valid NovelCreateDto dto) {
+    public NovelDto updateNovel(@PathVariable Long id, @RequestBody @Valid NovelCreateDto dto) {
         return novelService.updateNovel(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteNovel(@PathVariable @NonNull Long id) {
+    public ResponseEntity<Void> deleteNovel(@PathVariable Long id) {
         novelService.deleteNovel(id);
         return ResponseEntity.ok().build();
     }

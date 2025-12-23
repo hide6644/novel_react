@@ -5,6 +5,7 @@ import com.example.novel.entity.User;
 import com.example.novel.repository.AuthorRepository;
 import com.example.novel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

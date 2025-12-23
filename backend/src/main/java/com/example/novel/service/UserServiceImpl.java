@@ -6,7 +6,6 @@ import com.example.novel.entity.User;
 import com.example.novel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(@NonNull Long id, UserCreateDto dto) {
+    public UserDto updateUser(Long id, UserCreateDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         // For update, typically we might not change username or password here, but
@@ -79,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(@NonNull Long id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 

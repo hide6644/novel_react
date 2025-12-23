@@ -6,7 +6,6 @@ import com.example.novel.entity.Author;
 import com.example.novel.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ public class AuthorService {
                 .collect(Collectors.toList());
     }
 
-    public Page<AuthorDto> getAllAuthors(@NonNull Pageable pageable) {
+    public Page<AuthorDto> getAllAuthors(Pageable pageable) {
         return authorRepository.findAll(pageable)
                 .map(a -> new AuthorDto(a.getId(), a.getName(), a.getBirthDate(), a.getNationality()));
     }
@@ -45,7 +44,7 @@ public class AuthorService {
         return toDto(authorRepository.save(author));
     }
 
-    public AuthorDto updateAuthor(@NonNull Long id, AuthorCreateDto dto) {
+    public AuthorDto updateAuthor(Long id, AuthorCreateDto dto) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
         author.setName(dto.name());
@@ -54,11 +53,11 @@ public class AuthorService {
         return toDto(authorRepository.save(author));
     }
 
-    public void deleteAuthor(@NonNull Long id) {
+    public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }
 
-    public AuthorDto getAuthor(@NonNull Long id) {
+    public AuthorDto getAuthor(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
         return toDto(author);

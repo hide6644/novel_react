@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -26,93 +27,86 @@ import PageHeader from '../components/common/PageHeader';
 
 const NovelList = () => {
     const { user } = useAuth();
-    const [novels, setNovels] = useState([]);
+    const queryClient = useQueryClient();
+    const { t } = useTranslation();
+
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
-    const { t } = useTranslation();
+    const [searchParams, setSearchParams] = useState({ title: '', author: '' });
 
     // Modal State
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [currentNovel, setCurrentNovel] = useState({ title: '', description: '', authorId: '', publishDate: '' });
-    const [authors, setAuthors] = useState([]);
+    const [authorQuery, setAuthorQuery] = useState('');
 
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
-    const [pageSize] = useState(10); // Fixed page size or make it selectable
+    const [pageSize] = useState(10);
 
-    const fetchNovels = useCallback(async () => {
-        try {
+    // Fetch Novels
+    const { data: novelsData, isLoading: novelsLoading } = useQuery({
+        queryKey: ['novels', page, pageSize, searchParams],
+        queryFn: async () => {
             const params = {
-                page: page - 1, // backend is 0-indexed
-                size: pageSize
+                page: page - 1,
+                size: pageSize,
+                ...searchParams
             };
-            if (title) params.title = title;
-            if (author) params.author = author;
             const res = await api.get('/novels', { params });
-            // Handle Page response
-            setNovels(res.data.content);
-            setTotalPages(res.data.totalPages);
-        } catch (error) {
-            console.error(error);
-        }
-    }, [page, pageSize, title, author]);
+            return res.data;
+        },
+    });
 
-    const fetchAuthors = useCallback(async (query = '') => {
-        try {
-            const params = query ? { name: query } : {};
+    // Fetch Authors for Autocomplete
+    const { data: authors = [] } = useQuery({
+        queryKey: ['authors', authorQuery],
+        queryFn: async () => {
+            const params = authorQuery ? { name: authorQuery } : {};
             const res = await api.get('/authors', { params });
-            setAuthors(res.data);
-        } catch (error) {
-            console.error(error);
+            return res.data;
+        },
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id) => api.delete(`/novels/${id}`),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['novels'] });
+        },
+    });
+
+    const saveMutation = useMutation({
+        mutationFn: (novel) => {
+            if (isEdit) {
+                return api.put(`/novels/${novel.id}`, novel);
+            }
+            return api.post('/novels', novel);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['novels'] });
+            setShowModal(false);
+        },
+        onError: () => {
+            alert(t('error.opFailed'));
         }
-    }, []);
-
-    useEffect(() => {
-        fetchNovels();
-    }, [fetchNovels]); // Re-fetch when fetchNovels (and its dependencies) change
-
-    useEffect(() => {
-        fetchAuthors();
-    }, [fetchAuthors]);
+    });
 
     const handleSearch = () => {
-        if (page === 1) {
-            fetchNovels();
-        } else {
-            setPage(1);
-        }
+        setSearchParams({ title, author });
+        setPage(1);
     };
 
     const handlePageChange = (event, value) => {
         setPage(value);
     };
-    // ... handleDelete, handleSave ... (omitted for brevity in replacement, need to ensure I don't delete them)
-
 
     const handleDelete = async (id) => {
         if (!window.confirm(t('novel.deleteConfirm'))) return;
-        try {
-            await api.delete(`/novels/${id}`);
-            fetchNovels();
-        } catch (error) {
-            console.error(error);
-        }
+        deleteMutation.mutate(id);
     };
 
-    const handleSave = async (e) => {
+    const handleSave = (e) => {
         e.preventDefault();
-        try {
-            if (isEdit) {
-                await api.put(`/novels/${currentNovel.id}`, currentNovel);
-            } else {
-                await api.post('/novels', currentNovel);
-            }
-            setShowModal(false);
-            fetchNovels();
-        } catch (error) {
-            alert(t('error.opFailed'));
-        }
+        saveMutation.mutate(currentNovel);
     };
 
     const openModal = (novel = null) => {
@@ -123,9 +117,12 @@ const NovelList = () => {
             setIsEdit(false);
             setCurrentNovel({ title: '', description: '', authorId: '', publishDate: '' });
         }
-        fetchAuthors(); // Ensure author list is reset/fresh
+        setAuthorQuery('');
         setShowModal(true);
     };
+
+    const novels = novelsData?.content || [];
+    const totalPages = novelsData?.totalPages || 0;
 
     return (
         <Box>
@@ -165,7 +162,9 @@ const NovelList = () => {
             </Card>
 
             <Grid container spacing={3}>
-                {novels.map(novel => (
+                {novelsLoading ? (
+                    <Typography sx={{ m: 2 }}>{t('common.loading') || 'Loading...'}</Typography>
+                ) : novels.map(novel => (
                     <Grid size={{ xs: 12, sm: 6, md: 4 }} key={novel.id}>
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flexGrow: 1 }}>
@@ -243,11 +242,7 @@ const NovelList = () => {
                                 setCurrentNovel({ ...currentNovel, authorId: newValue ? newValue.id : '' });
                             }}
                             onInputChange={(event, newInputValue) => {
-                                if (newInputValue) {
-                                    fetchAuthors(newInputValue);
-                                } else {
-                                    fetchAuthors(); // reset to default list
-                                }
+                                setAuthorQuery(newInputValue);
                             }}
                             renderInput={(params) => (
                                 <TextField

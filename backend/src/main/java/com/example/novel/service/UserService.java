@@ -4,16 +4,14 @@ import com.example.novel.dto.UserCreateDto;
 import com.example.novel.dto.UserDto;
 import java.util.List;
 
-import org.jspecify.annotations.NonNull;
-
 public interface UserService {
     List<UserDto> getAllUsers();
 
     UserDto createUser(UserCreateDto dto);
 
-    UserDto updateUser(@NonNull Long id, UserCreateDto dto);
+    UserDto updateUser(Long id, UserCreateDto dto);
 
-    void deleteUser(@NonNull Long id);
+    void deleteUser(Long id);
 
     UserDto getCurrentUser(String username);
 
