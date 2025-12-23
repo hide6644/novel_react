@@ -206,7 +206,7 @@ const AuthorList = () => {
                             type="date"
                             fullWidth
                             variant="outlined"
-                            InputLabelProps={{ shrink: true }}
+                            slotProps={{ inputLabel: { shrink: true } }}
                             value={currentAuthor.birthDate}
                             onChange={e => setCurrentAuthor({ ...currentAuthor, birthDate: e.target.value })}
                         />

@@ -196,7 +196,7 @@ const AdminUserList = () => {
                             label={t('label.expiryDate')}
                             type="date"
                             fullWidth
-                            InputLabelProps={{ shrink: true }}
+                            slotProps={{ inputLabel: { shrink: true } }}
                             value={currentUser.expiryDate || ''}
                             onChange={e => setCurrentUser({ ...currentUser, expiryDate: e.target.value })}
                         />

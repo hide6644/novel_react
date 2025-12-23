@@ -265,7 +265,7 @@ const NovelList = () => {
                             type="date"
                             fullWidth
                             variant="outlined"
-                            InputLabelProps={{ shrink: true }}
+                            slotProps={{ inputLabel: { shrink: true } }}
                             value={currentNovel.publishDate}
                             onChange={e => setCurrentNovel({ ...currentNovel, publishDate: e.target.value })}
                         />
