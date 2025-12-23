@@ -51,7 +51,7 @@ const ChangePassword = () => {
                     {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
                     {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
 
-                    <Box component="form" onSubmit={handleSubmit} noValidate>
+                    <Box component="form" onSubmit={handleSubmit}>
                         <TextField
                             margin="normal"
                             required

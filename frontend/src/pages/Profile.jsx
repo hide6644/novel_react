@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { Box, Card, CardContent, Typography, TextField, Button, Alert, Grid } from '@mui/material';
@@ -16,7 +16,7 @@ const Profile = () => {
     const [profileMessage, setProfileMessage] = useState('');
     const [isProfileError, setIsProfileError] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (user) {
             setProfileData({
                 firstName: user.firstName || '',

@@ -182,7 +182,7 @@ const AdminUserList = () => {
                         />
                         <TextField
                             margin="dense"
-                            label={isEdit ? t('label.password') + " (Leave empty to keep)" : t('label.password')}
+                            label={isEdit ? t('label.password') + t('label.emptyToKeep') : t('label.password')}
                             type="password"
                             fullWidth
                             value={currentUser.password || ''}
