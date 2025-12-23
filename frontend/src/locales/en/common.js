@@ -8,5 +8,6 @@ export const common = {
     "table.actions": "Actions",
     "error.opFailed": "Operation failed",
     "confirm.delete": "Are you sure you want to delete this?",
-    "error.deleteFailed": "Failed to delete."
+    "error.deleteFailed": "Failed to delete.",
+    "loading": "Loading..."
 };

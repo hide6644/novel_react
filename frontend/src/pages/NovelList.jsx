@@ -122,7 +122,7 @@ const NovelList = () => {
     };
 
     const novels = novelsData?.content || [];
-    const totalPages = novelsData?.totalPages || 0;
+    const totalPages = novelsData?.page.totalPages || 0;
 
     return (
         <Box>
@@ -163,7 +163,7 @@ const NovelList = () => {
 
             <Grid container spacing={3}>
                 {novelsLoading ? (
-                    <Typography sx={{ m: 2 }}>{t('common.loading') || 'Loading...'}</Typography>
+                    <Typography sx={{ m: 2 }}>{t('loading')}</Typography>
                 ) : novels.map(novel => (
                     <Grid size={{ xs: 12, sm: 6, md: 4 }} key={novel.id}>
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>

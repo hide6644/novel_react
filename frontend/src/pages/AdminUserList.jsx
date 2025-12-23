@@ -121,7 +121,7 @@ const AdminUserList = () => {
                         {usersLoading ? (
                             <TableRow>
                                 <TableCell colSpan={7} align="center">
-                                    {t('common.loading') || 'Loading...'}
+                                    {t('loading')}
                                 </TableCell>
                             </TableRow>
                         ) : users.map((row) => (

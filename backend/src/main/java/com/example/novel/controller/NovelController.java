@@ -6,9 +6,9 @@ import com.example.novel.service.NovelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +21,13 @@ public class NovelController {
     private final NovelService novelService;
 
     @GetMapping
-    public Page<NovelDto> search(@RequestParam(required = false) String title,
+    public PagedModel<NovelDto> search(@RequestParam(required = false) String title,
             @RequestParam(required = false) String author,
             @PageableDefault(size = 10) Pageable pageable) {
         if (title == null && author == null) {
-            return novelService.getAllNovels(pageable);
+            return new PagedModel<>(novelService.getAllNovels(pageable));
         }
-        return novelService.search(title, author, pageable);
+        return new PagedModel<>(novelService.search(title, author, pageable));
     }
 
     @GetMapping("/{id}")

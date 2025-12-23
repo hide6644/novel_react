@@ -6,9 +6,9 @@ import com.example.novel.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -28,8 +28,8 @@ public class AuthorController {
     }
 
     @GetMapping("/page")
-    public Page<AuthorDto> getAuthorsPaginated(@PageableDefault(size = 10) Pageable pageable) {
-        return authorService.getAllAuthors(pageable);
+    public PagedModel<AuthorDto> getAuthorsPaginated(@PageableDefault(size = 10) Pageable pageable) {
+        return new PagedModel<>(authorService.getAllAuthors(pageable));
     }
 
     @GetMapping("/{id}")

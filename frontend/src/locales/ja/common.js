@@ -8,5 +8,6 @@ export const common = {
     "table.actions": "操作",
     "error.opFailed": "処理に失敗しました",
     "confirm.delete": "本当に削除しますか？",
-    "error.deleteFailed": "削除に失敗しました。"
+    "error.deleteFailed": "削除に失敗しました。",
+    "loading": "読み込み中..."
 };

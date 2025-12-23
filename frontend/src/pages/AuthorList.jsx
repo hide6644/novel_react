@@ -110,7 +110,7 @@ const AuthorList = () => {
     };
 
     const authors = authorsData?.content || [];
-    const totalPages = authorsData?.totalPages || 0;
+    const totalPages = authorsData?.page.totalPages || 0;
 
     return (
         <Box>
@@ -144,7 +144,7 @@ const AuthorList = () => {
                         {authorsLoading ? (
                             <TableRow>
                                 <TableCell colSpan={user?.role === 'ADMIN' ? 5 : 4} align="center">
-                                    {t('common.loading') || 'Loading...'}
+                                    {t('loading')}
                                 </TableCell>
                             </TableRow>
                         ) : authors.map((author) => (
