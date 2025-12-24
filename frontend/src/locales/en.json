@@ -1,0 +1,123 @@
+{
+    "common": {
+        "app": {
+            "title": "Novel Search"
+        },
+        "welcome": {
+            "back": "Welcome Back"
+        },
+        "btn": {
+            "save": "Save",
+            "cancel": "Cancel",
+            "search": "Search"
+        },
+        "table": {
+            "id": "ID",
+            "actions": "Actions"
+        },
+        "error": {
+            "opFailed": "Operation failed",
+            "deleteFailed": "Failed to delete."
+        },
+        "confirm": {
+            "delete": "Are you sure you want to delete this?"
+        },
+        "loading": "Loading..."
+    },
+    "validate": {
+        "required": "Required field",
+        "minLength": "Must be {{min}} characters or more",
+        "maxLength": "Must be {{max}} characters or less",
+        "select": "Please select"
+    },
+    "nav": {
+        "login": "Login",
+        "logout": "Logout",
+        "admin": {
+            "label": "Admin",
+            "users": "Manage Users"
+        },
+        "authors": "Authors"
+    },
+    "auth": {
+        "login": {
+            "failed": "Login failed. Check your credentials."
+        },
+        "btn": {
+            "login": "Login"
+        }
+    },
+    "user": {
+        "title": "Manage Users",
+        "add": "Add User",
+        "edit": "Edit User",
+        "label": {
+            "username": "Username",
+            "password": "Password",
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "role": "Role",
+            "expiryDate": "Expiry Date",
+            "emptyToKeep": " (change without input)",
+            "currentPassword": "Current Password",
+            "newPassword": "New Password",
+            "confirmPassword": "Confirm New Password"
+        },
+        "error": {
+            "usernameExists": "Username already exists"
+        }
+    },
+    "profile": {
+        "title": "My Profile",
+        "changePassword": {
+            "title": "Change Password",
+            "header": "Change Password",
+            "btn": "Change Password",
+            "success": "Password changed successfully",
+            "failed": "Failed to change password"
+        },
+        "updatePassword": {
+            "btn": "Update Password",
+            "success": "Password updated successfully!",
+            "failed": "Failed to update password."
+        },
+        "error": {
+            "passwordMismatch": "Passwords do not match",
+            "currentPasswordIncorrect": "Current password is incorrect"
+        },
+        "details": {
+            "header": "Profile Details",
+            "success": "Profile updated successfully!",
+            "failed": "Failed to update profile."
+        }
+    },
+    "novel": {
+        "title": "Novel Search",
+        "add": "Add Novel",
+        "edit": "Edit Novel",
+        "search": {
+            "title": "Search by Title",
+            "author": "Search by Author"
+        },
+        "by": "By",
+        "published": "Published",
+        "deleteConfirm": "Are you sure you want to delete this?",
+        "label": {
+            "title": "Title",
+            "description": "Description",
+            "publishDate": "Publish Date",
+            "author": "Author",
+            "selectAuthor": "Select Author"
+        }
+    },
+    "author": {
+        "title": "Authors",
+        "add": "Add Author",
+        "edit": "Edit Author",
+        "label": {
+            "name": "Name",
+            "nationality": "Nationality",
+            "birthDate": "Birth Date"
+        }
+    }
+}

@@ -45,7 +45,7 @@ const Navbar = () => {
                 <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
                     <MenuBookIcon sx={{ mr: 1 }} />
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-                        {t('app.title')}
+                        {t('common.app.title')}
                     </Typography>
                 </Link>
 
@@ -72,7 +72,7 @@ const Navbar = () => {
                         <>
                             {user.role === 'ADMIN' && (
                                 <Button color="inherit" component={Link} to="/admin/users" startIcon={<AdminPanelSettingsIcon />}>
-                                    {t('nav.admin')}
+                                    {t('nav.admin.label')}
                                 </Button>
                             )}
                             <Button color="inherit" component={Link} to="/profile" startIcon={<AccountCircleIcon />}>

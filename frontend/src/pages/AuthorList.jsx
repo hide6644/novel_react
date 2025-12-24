@@ -77,7 +77,7 @@ const AuthorList = () => {
             queryClient.invalidateQueries({ queryKey: ['authors'] });
         },
         onError: () => {
-            alert(t('error.deleteFailed'));
+            alert(t('common.error.deleteFailed'));
         }
     });
 
@@ -93,7 +93,7 @@ const AuthorList = () => {
             setShowModal(false);
         },
         onError: () => {
-            alert(t('error.opFailed'));
+            alert(t('common.error.opFailed'));
         }
     });
 
@@ -107,7 +107,7 @@ const AuthorList = () => {
     };
 
     const handleDelete = (id) => {
-        if (!window.confirm(t('confirm.delete'))) return;
+        if (!window.confirm(t('common.confirm.delete'))) return;
         deleteMutation.mutate(id);
     };
 
@@ -154,26 +154,26 @@ const AuthorList = () => {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onSearch={handleSearch}
-                label={t('search.author')}
-                buttonLabel={t('btn.search')}
+                label={t('novel.search.author')}
+                buttonLabel={t('common.btn.search')}
             />
 
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>{t('table.id')}</TableCell>
-                            <TableCell>{t('table.name')}</TableCell>
-                            <TableCell>{t('table.nationality')}</TableCell>
-                            <TableCell>{t('table.birthDate')}</TableCell>
-                            {user?.role === 'ADMIN' && <TableCell>{t('table.actions')}</TableCell>}
+                            <TableCell>{t('common.table.id')}</TableCell>
+                            <TableCell>{t('author.label.name')}</TableCell>
+                            <TableCell>{t('author.label.nationality')}</TableCell>
+                            <TableCell>{t('author.label.birthDate')}</TableCell>
+                            {user?.role === 'ADMIN' && <TableCell>{t('common.table.actions')}</TableCell>}
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {authorsLoading ? (
                             <TableRow>
                                 <TableCell colSpan={user?.role === 'ADMIN' ? 5 : 4} align="center">
-                                    {t('loading')}
+                                    {t('common.loading')}
                                 </TableCell>
                             </TableRow>
                         ) : authors.map((author) => (
@@ -218,7 +218,7 @@ const AuthorList = () => {
                             control={control}
                             autoFocus
                             margin="dense"
-                            label={t('label.name')}
+                            label={t('author.label.name')}
                             type="text"
                             fullWidth
                             variant="outlined"
@@ -228,7 +228,7 @@ const AuthorList = () => {
                             name="nationality"
                             control={control}
                             margin="dense"
-                            label={t('label.nationality')}
+                            label={t('author.label.nationality')}
                             type="text"
                             fullWidth
                             variant="outlined"
@@ -237,7 +237,7 @@ const AuthorList = () => {
                             name="birthDate"
                             control={control}
                             margin="dense"
-                            label={t('label.birthDate')}
+                            label={t('author.label.birthDate')}
                             type="date"
                             fullWidth
                             variant="outlined"
@@ -245,8 +245,8 @@ const AuthorList = () => {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setShowModal(false)}>{t('btn.cancel')}</Button>
-                        <Button type="submit" variant="contained">{t('btn.save')}</Button>
+                        <Button onClick={() => setShowModal(false)}>{t('common.btn.cancel')}</Button>
+                        <Button type="submit" variant="contained">{t('common.btn.save')}</Button>
                     </DialogActions>
                 </form>
             </Dialog>

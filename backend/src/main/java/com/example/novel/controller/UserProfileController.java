@@ -1,5 +1,7 @@
 package com.example.novel.controller;
 
+import com.example.novel.dto.UserDto;
+import com.example.novel.dto.UserProfileUpdateDto;
 import com.example.novel.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +36,7 @@ public class UserProfileController {
     }
 
     @PutMapping("/info")
-    public com.example.novel.dto.UserDto updateProfile(@RequestBody com.example.novel.dto.UserProfileUpdateDto dto) {
+    public UserDto updateProfile(@RequestBody UserProfileUpdateDto dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.updateProfile(auth.getName(), dto);
     }

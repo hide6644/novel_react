@@ -33,7 +33,7 @@ const Login = () => {
                 navigate('/change-password', { state: { username: data.username } });
                 return;
             }
-            setError(t('login.failed'));
+            setError(t('auth.login.failed'));
         }
     };
 
@@ -42,7 +42,7 @@ const Login = () => {
             <Card sx={{ width: '100%', maxWidth: 400, p: 2 }}>
                 <CardContent>
                     <Typography variant="h4" component="h2" align="center" gutterBottom>
-                        {t('welcome.back')}
+                        {t('common.welcome.back')}
                     </Typography>
 
                     {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -54,7 +54,7 @@ const Login = () => {
                             margin="normal"
                             required
                             fullWidth
-                            label={t('label.username')}
+                            label={t('user.label.username')}
                             autoFocus
                         />
                         <FormTextField
@@ -63,7 +63,7 @@ const Login = () => {
                             margin="normal"
                             required
                             fullWidth
-                            label={t('label.password')}
+                            label={t('user.label.password')}
                             type="password"
                         />
                         <Button
@@ -73,7 +73,7 @@ const Login = () => {
                             size="large"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            {t('btn.login')}
+                            {t('auth.btn.login')}
                         </Button>
                     </Box>
                 </CardContent>

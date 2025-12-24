@@ -98,10 +98,10 @@ const AdminUserList = () => {
             if (error.response && error.response.status === 409) {
                 setError('username', {
                     type: 'manual',
-                    message: t('error.usernameExists')
+                    message: t('user.error.usernameExists')
                 });
             } else {
-                alert(t('error.opFailed'));
+                alert(t('common.error.opFailed'));
             }
         }
     });
@@ -155,9 +155,9 @@ const AdminUserList = () => {
     return (
         <Box>
             <PageHeader
-                title={t('admin.user.title')}
+                title={t('user.title')}
                 onAdd={() => openModal()}
-                addButtonLabel={t('admin.user.add')}
+                addButtonLabel={t('user.add')}
             />
 
             <TableContainer component={Paper}>
@@ -165,19 +165,19 @@ const AdminUserList = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>ID</TableCell>
-                            <TableCell>{t('label.username')}</TableCell>
-                            <TableCell>{t('label.firstName')}</TableCell>
-                            <TableCell>{t('label.lastName')}</TableCell>
-                            <TableCell>{t('label.role')}</TableCell>
-                            <TableCell>{t('label.expiryDate')}</TableCell>
-                            <TableCell>{t('table.actions')}</TableCell>
+                            <TableCell>{t('user.label.username')}</TableCell>
+                            <TableCell>{t('user.label.firstName')}</TableCell>
+                            <TableCell>{t('user.label.lastName')}</TableCell>
+                            <TableCell>{t('user.label.role')}</TableCell>
+                            <TableCell>{t('user.label.expiryDate')}</TableCell>
+                            <TableCell>{t('common.table.actions')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {usersLoading ? (
                             <TableRow>
                                 <TableCell colSpan={7} align="center">
-                                    {t('loading')}
+                                    {t('common.loading')}
                                 </TableCell>
                             </TableRow>
                         ) : users.map((row) => (
@@ -210,14 +210,14 @@ const AdminUserList = () => {
 
             {/* Dialog */}
             <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth maxWidth="xs">
-                <DialogTitle>{isEdit ? t('admin.user.edit') : t('admin.user.add')}</DialogTitle>
+                <DialogTitle>{isEdit ? t('user.edit') : t('user.add')}</DialogTitle>
                 <form onSubmit={handleSubmit(handleSave)} noValidate>
                     <DialogContent>
                         <FormTextField
                             name="username"
                             control={control}
                             margin="dense"
-                            label={t('label.username')}
+                            label={t('user.label.username')}
                             fullWidth
                             required
                             disabled={isEdit}
@@ -226,21 +226,21 @@ const AdminUserList = () => {
                             name="lastName"
                             control={control}
                             margin="dense"
-                            label={t('label.lastName')}
+                            label={t('user.label.lastName')}
                             fullWidth
                         />
                         <FormTextField
                             name="firstName"
                             control={control}
                             margin="dense"
-                            label={t('label.firstName')}
+                            label={t('user.label.firstName')}
                             fullWidth
                         />
                         <FormTextField
                             name="password"
                             control={control}
                             margin="dense"
-                            label={isEdit ? t('label.password') + t('label.emptyToKeep') : t('label.password')}
+                            label={isEdit ? t('user.label.password') + t('user.label.emptyToKeep') : t('user.label.password')}
                             type="password"
                             fullWidth
                             required={!isEdit}
@@ -250,7 +250,7 @@ const AdminUserList = () => {
                             name="role"
                             control={control}
                             margin="dense"
-                            label={t('label.role')}
+                            label={t('user.label.role')}
                             fullWidth
                         >
                             <MenuItem value="USER">USER</MenuItem>
@@ -260,15 +260,15 @@ const AdminUserList = () => {
                             name="expiryDate"
                             control={control}
                             margin="dense"
-                            label={t('label.expiryDate')}
+                            label={t('user.label.expiryDate')}
                             type="date"
                             fullWidth
                             slotProps={{ inputLabel: { shrink: true } }}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setShowModal(false)}>{t('btn.cancel')}</Button>
-                        <Button type="submit" variant="contained">{t('btn.save')}</Button>
+                        <Button onClick={() => setShowModal(false)}>{t('common.btn.cancel')}</Button>
+                        <Button type="submit" variant="contained">{t('common.btn.save')}</Button>
                     </DialogActions>
                 </form>
             </Dialog>

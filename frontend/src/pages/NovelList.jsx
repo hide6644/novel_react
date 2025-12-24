@@ -102,7 +102,7 @@ const NovelList = () => {
             setShowModal(false);
         },
         onError: () => {
-            alert(t('error.opFailed'));
+            alert(t('common.error.opFailed'));
         }
     });
 
@@ -164,7 +164,7 @@ const NovelList = () => {
                     <Grid size={{ xs: 12, sm: 5 }}>
                         <TextField
                             fullWidth
-                            label={t('search.title')}
+                            label={t('novel.search.title')}
                             value={title}
                             onChange={e => setTitle(e.target.value)}
                             size="small"
@@ -173,7 +173,7 @@ const NovelList = () => {
                     <Grid size={{ xs: 12, sm: 5 }}>
                         <TextField
                             fullWidth
-                            label={t('search.author')}
+                            label={t('novel.search.author')}
                             value={author}
                             onChange={e => setAuthor(e.target.value)}
                             size="small"
@@ -181,7 +181,7 @@ const NovelList = () => {
                     </Grid>
                     <Grid size={{ xs: 12, sm: 2 }}>
                         <Button fullWidth variant="contained" startIcon={<SearchIcon />} onClick={handleSearch}>
-                            {t('btn.search')}
+                            {t('common.btn.search')}
                         </Button>
                     </Grid>
                 </Grid>
@@ -189,7 +189,7 @@ const NovelList = () => {
 
             <Grid container spacing={3}>
                 {novelsLoading ? (
-                    <Typography sx={{ m: 2 }}>{t('loading')}</Typography>
+                    <Typography sx={{ m: 2 }}>{t('common.loading')}</Typography>
                 ) : novels.map(novel => (
                     <Grid size={{ xs: 12, sm: 6, md: 4 }} key={novel.id}>
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -243,7 +243,7 @@ const NovelList = () => {
                             control={control}
                             autoFocus
                             margin="dense"
-                            label={t('label.title')}
+                            label={t('novel.label.title')}
                             type="text"
                             fullWidth
                             variant="outlined"
@@ -253,7 +253,7 @@ const NovelList = () => {
                             name="description"
                             control={control}
                             margin="dense"
-                            label={t('label.description')}
+                            label={t('novel.label.description')}
                             type="text"
                             fullWidth
                             multiline
@@ -264,13 +264,13 @@ const NovelList = () => {
                             name="authorId"
                             control={control}
                             options={authors}
-                            label={t('label.author')}
+                            label={t('novel.label.author')}
                         />
                         <FormTextField
                             name="publishDate"
                             control={control}
                             margin="dense"
-                            label={t('label.publishDate')}
+                            label={t('novel.label.publishDate')}
                             type="date"
                             fullWidth
                             variant="outlined"
@@ -279,8 +279,8 @@ const NovelList = () => {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setShowModal(false)}>{t('btn.cancel')}</Button>
-                        <Button type="submit" variant="contained">{t('btn.save')}</Button>
+                        <Button onClick={() => setShowModal(false)}>{t('common.btn.cancel')}</Button>
+                        <Button type="submit" variant="contained">{t('common.btn.save')}</Button>
                     </DialogActions>
                 </form>
             </Dialog>

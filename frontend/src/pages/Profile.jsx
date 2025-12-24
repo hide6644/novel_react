@@ -51,10 +51,10 @@ const Profile = () => {
         try {
             await api.put('/profile/info', data);
             await checkUser();
-            setProfileMessage(t('msg.profileUpdated'));
+            setProfileMessage(t('profile.details.success'));
             setIsProfileError(false);
         } catch (error) {
-            setProfileMessage(t('msg.profileUpdateFailed'));
+            setProfileMessage(t('profile.details.failed'));
             setIsProfileError(true);
         }
     };
@@ -65,18 +65,18 @@ const Profile = () => {
                 currentPassword: data.currentPassword,
                 newPassword: data.newPassword
             });
-            setMessage(t('msg.passwordUpdated'));
+            setMessage(t('profile.updatePassword.success'));
             setIsError(false);
             resetPassword();
         } catch (error) {
             if (error.response && error.response.status === 401) {
                 setPasswordError('currentPassword', {
                     type: 'manual',
-                    message: t('error.currentPasswordIncorrect')
+                    message: t('profile.error.currentPasswordIncorrect')
                 });
                 setMessage(''); // Clear general message if specific field error exists
             } else {
-                setMessage(t('msg.passwordUpdateFailed'));
+                setMessage(t('profile.updatePassword.failed'));
                 setIsError(true);
             }
         }
@@ -91,16 +91,16 @@ const Profile = () => {
             </Typography>
             <Card sx={{ p: 2, mb: 4 }}>
                 <CardContent>
-                    <Typography variant="h5" gutterBottom>{t('heading.profileDetails')}</Typography>
+                    <Typography variant="h5" gutterBottom>{t('profile.details.header')}</Typography>
                     {profileMessage && (
                         <Alert severity={isProfileError ? 'error' : 'success'} sx={{ mb: 2 }}>
                             {profileMessage}
                         </Alert>
                     )}
-                    <Box component="form" onSubmit={handleProfileSubmit(onProfileUpdate)}>
+                    <Box component="form" onSubmit={handleProfileSubmit(onProfileUpdate)} noValidate>
                         <Grid container spacing={2}>
                             <Grid size={12}>
-                                <Typography variant="subtitle2" color="text.secondary">{t('label.username')}</Typography>
+                                <Typography variant="subtitle2" color="text.secondary">{t('user.label.username')}</Typography>
                                 <Typography variant="h6">{user.username}</Typography>
                             </Grid>
                             <Grid size={6}>
@@ -108,7 +108,7 @@ const Profile = () => {
                                     name="lastName"
                                     control={profileControl}
                                     fullWidth
-                                    label={t('label.lastName')}
+                                    label={t('user.label.lastName')}
                                 />
                             </Grid>
                             <Grid size={6}>
@@ -116,20 +116,20 @@ const Profile = () => {
                                     name="firstName"
                                     control={profileControl}
                                     fullWidth
-                                    label={t('label.firstName')}
+                                    label={t('user.label.firstName')}
                                 />
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="subtitle2" color="text.secondary">{t('label.role')}</Typography>
+                                <Typography variant="subtitle2" color="text.secondary">{t('user.label.role')}</Typography>
                                 <Typography variant="body1">{user.role}</Typography>
                             </Grid>
                             <Grid size={6}>
-                                <Typography variant="subtitle2" color="text.secondary">{t('label.expiryDate')}</Typography>
+                                <Typography variant="subtitle2" color="text.secondary">{t('user.label.expiryDate')}</Typography>
                                 <Typography variant="body1">{user.expiryDate}</Typography>
                             </Grid>
                             <Grid size={12}>
                                 <Button type="submit" variant="contained">
-                                    {t('btn.save')}
+                                    {t('common.btn.save')}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -139,19 +139,19 @@ const Profile = () => {
 
             <Card sx={{ p: 2 }}>
                 <CardContent>
-                    <Typography variant="h5" gutterBottom>{t('profile.changePassword')}</Typography>
+                    <Typography variant="h5" gutterBottom>{t('profile.changePassword.header')}</Typography>
                     {message && (
                         <Alert severity={isError ? 'error' : 'success'} sx={{ mb: 2 }}>
                             {message}
                         </Alert>
                     )}
 
-                    <Box component="form" onSubmit={handlePasswordSubmit(onPasswordChange)}>
+                    <Box component="form" onSubmit={handlePasswordSubmit(onPasswordChange)} noValidate>
                         <FormTextField
                             name="currentPassword"
                             control={passwordControl}
                             fullWidth
-                            label={t('label.currentPassword')}
+                            label={t('user.label.currentPassword')}
                             type="password"
                             required
                             sx={{ mb: 2 }}
@@ -160,13 +160,13 @@ const Profile = () => {
                             name="newPassword"
                             control={passwordControl}
                             fullWidth
-                            label={t('profile.newPassword')}
+                            label={t('user.label.newPassword')}
                             type="password"
                             required
                             sx={{ mb: 2 }}
                         />
                         <Button type="submit" variant="contained" color="secondary">
-                            {t('btn.updatePassword')}
+                            {t('profile.updatePassword.btn')}
                         </Button>
                     </Box>
                 </CardContent>

@@ -1,0 +1,123 @@
+{
+    "common": {
+        "app": {
+            "title": "Novel Search"
+        },
+        "welcome": {
+            "back": "おかえりなさい"
+        },
+        "btn": {
+            "save": "保存",
+            "cancel": "キャンセル",
+            "search": "検索"
+        },
+        "table": {
+            "id": "ID",
+            "actions": "操作"
+        },
+        "error": {
+            "opFailed": "処理に失敗しました",
+            "deleteFailed": "削除に失敗しました。"
+        },
+        "confirm": {
+            "delete": "本当に削除しますか？"
+        },
+        "loading": "読み込み中..."
+    },
+    "validate": {
+        "required": "必須項目です",
+        "minLength": "{{min}}文字以上で入力してください",
+        "maxLength": "{{max}}文字以内で入力してください",
+        "select": "選択してください"
+    },
+    "nav": {
+        "login": "ログイン",
+        "logout": "ログアウト",
+        "admin": {
+            "label": "管理者",
+            "users": "ユーザー管理"
+        },
+        "authors": "著者管理"
+    },
+    "auth": {
+        "login": {
+            "failed": "ログインに失敗しました。認証情報を確認してください。"
+        },
+        "btn": {
+            "login": "ログイン"
+        }
+    },
+    "user": {
+        "title": "ユーザー管理",
+        "add": "ユーザー追加",
+        "edit": "ユーザー編集",
+        "label": {
+            "username": "ユーザー名",
+            "password": "パスワード",
+            "firstName": "名",
+            "lastName": "姓",
+            "role": "権限",
+            "expiryDate": "有効期限",
+            "emptyToKeep": " (変更無しの場合は未入力)",
+            "currentPassword": "現在のパスワード",
+            "newPassword": "新しいパスワード",
+            "confirmPassword": "新しいパスワード（確認）"
+        },
+        "error": {
+            "usernameExists": "ユーザー名は既に使用されています"
+        }
+    },
+    "profile": {
+        "title": "マイプロフィール",
+        "changePassword": {
+            "title": "パスワード変更",
+            "header": "パスワード変更",
+            "btn": "パスワード変更",
+            "success": "パスワードを変更しました",
+            "failed": "パスワードの変更に失敗しました"
+        },
+        "updatePassword": {
+            "btn": "パスワード更新",
+            "success": "パスワードを更新しました！",
+            "failed": "パスワードの更新に失敗しました。"
+        },
+        "error": {
+            "passwordMismatch": "パスワードが一致しません",
+            "currentPasswordIncorrect": "現在のパスワードが正しくありません"
+        },
+        "details": {
+            "header": "プロフィール詳細",
+            "success": "プロフィールを更新しました！",
+            "failed": "プロフィールの更新に失敗しました。"
+        }
+    },
+    "novel": {
+        "title": "小説検索",
+        "add": "小説追加",
+        "edit": "小説編集",
+        "search": {
+            "title": "タイトルで検索",
+            "author": "著者で検索"
+        },
+        "by": "著者:",
+        "published": "出版日:",
+        "deleteConfirm": "本当に削除しますか？",
+        "label": {
+            "title": "タイトル",
+            "description": "あらすじ",
+            "publishDate": "出版日",
+            "author": "著者",
+            "selectAuthor": "著者を選択"
+        }
+    },
+    "author": {
+        "title": "著者一覧",
+        "add": "著者追加",
+        "edit": "著者編集",
+        "label": {
+            "name": "名前",
+            "nationality": "国籍",
+            "birthDate": "生年月日"
+        }
+    }
+}

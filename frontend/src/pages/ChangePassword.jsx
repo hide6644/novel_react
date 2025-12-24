@@ -21,7 +21,7 @@ const ChangePassword = () => {
         newPassword: z.string().min(4, t('validate.minLength', { min: 4 })).max(100, t('validate.maxLength', { max: 100 })),
         confirmPassword: z.string().min(1, t('validate.required'))
     }).refine((data) => data.newPassword === data.confirmPassword, {
-        message: t('error.passwordMismatch'),
+        message: t('profile.error.passwordMismatch'),
         path: ["confirmPassword"],
     });
 
@@ -45,15 +45,15 @@ const ChangePassword = () => {
                 currentPassword: data.currentPassword,
                 newPassword: data.newPassword
             });
-            setSuccess(t('success.passwordChanged'));
+            setSuccess(t('profile.changePassword.success'));
             setTimeout(() => {
                 navigate('/login');
             }, 2000);
         } catch (error) {
             if (error.response && error.response.status === 401) {
-                setError(t('error.currentPasswordIncorrect'));
+                setError(t('profile.error.currentPasswordIncorrect'));
             } else {
-                setError(t('error.changePasswordFailed'));
+                setError(t('profile.changePassword.failed'));
             }
         }
     };
@@ -63,7 +63,7 @@ const ChangePassword = () => {
             <Card sx={{ width: '100%', maxWidth: 400, p: 2 }}>
                 <CardContent>
                     <Typography variant="h5" component="h2" align="center" gutterBottom>
-                        {t('title.changePassword')}
+                        {t('profile.changePassword.title')}
                     </Typography>
 
                     {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -76,7 +76,7 @@ const ChangePassword = () => {
                             margin="normal"
                             required
                             fullWidth
-                            label={t('label.username')}
+                            label={t('user.label.username')}
                             disabled={!!location.state?.username}
                         />
                         <FormTextField
@@ -85,7 +85,7 @@ const ChangePassword = () => {
                             margin="normal"
                             required
                             fullWidth
-                            label={t('label.currentPassword')}
+                            label={t('user.label.currentPassword')}
                             type="password"
                         />
                         <FormTextField
@@ -94,7 +94,7 @@ const ChangePassword = () => {
                             margin="normal"
                             required
                             fullWidth
-                            label={t('label.newPassword')}
+                            label={t('user.label.newPassword')}
                             type="password"
                         />
                         <FormTextField
@@ -103,7 +103,7 @@ const ChangePassword = () => {
                             margin="normal"
                             required
                             fullWidth
-                            label={t('label.confirmPassword')}
+                            label={t('user.label.confirmPassword')}
                             type="password"
                         />
                         <Button
@@ -113,7 +113,7 @@ const ChangePassword = () => {
                             size="large"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            {t('btn.changePassword')}
+                            {t('profile.changePassword.btn')}
                         </Button>
                     </Box>
                 </CardContent>

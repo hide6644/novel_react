@@ -1,5 +1,6 @@
 package com.example.novel.controller;
 
+import com.example.novel.dto.ChangePasswordRequest;
 import com.example.novel.dto.LoginRequest;
 import com.example.novel.dto.UserDto;
 import com.example.novel.service.UserService;
@@ -43,8 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<Void> changePassword(
-            @RequestBody @Valid com.example.novel.dto.ChangePasswordRequest request) {
+    public ResponseEntity<Void> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         userService.processPasswordChange(request);
         return ResponseEntity.ok().build();
     }
