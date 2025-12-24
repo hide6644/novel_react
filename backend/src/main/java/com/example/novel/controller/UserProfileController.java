@@ -19,18 +19,18 @@ public class UserProfileController {
 
     @PutMapping("/password")
     public void changePassword(@RequestBody Map<String, String> payload) {
-        String oldPassword = payload.get("oldPassword");
-        String newPassword = payload.get("password");
+        String currentPassword = payload.get("currentPassword");
+        String newPassword = payload.get("newPassword");
 
         if (newPassword == null || newPassword.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password cannot be empty");
         }
-        if (oldPassword == null || oldPassword.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password cannot be empty");
+        if (currentPassword == null || currentPassword.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Current password cannot be empty");
         }
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        userService.changePassword(auth.getName(), oldPassword, newPassword);
+        userService.changePassword(auth.getName(), currentPassword, newPassword);
     }
 
     @PutMapping("/info")

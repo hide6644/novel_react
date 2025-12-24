@@ -90,12 +90,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String username, String oldPassword, String newPassword) {
+    public void changePassword(String username, String currentPassword, String newPassword) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid old password");
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid current password");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -108,8 +108,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(request.username())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid old password");
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid current password");
         }
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));

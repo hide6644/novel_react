@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -16,14 +19,15 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Pagination,
-    Autocomplete
+    Pagination
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
 import PageHeader from '../components/common/PageHeader';
+import FormTextField from '../components/common/FormTextField';
+import FormAutocomplete from '../components/common/FormAutocomplete';
 
 const NovelList = () => {
     const { user } = useAuth();
@@ -37,8 +41,20 @@ const NovelList = () => {
     // Modal State
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const [currentNovel, setCurrentNovel] = useState({ title: '', description: '', authorId: '', publishDate: '' });
+    const [editingId, setEditingId] = useState(null);
     const [authorQuery, setAuthorQuery] = useState('');
+
+    const schema = z.object({
+        title: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
+        description: z.string().max(500, t('validate.maxLength', { max: 500 })).optional(),
+        authorId: z.union([z.number(), z.string()]).refine(val => val !== '', t('validate.select')),
+        publishDate: z.string().optional().nullable()
+    });
+
+    const { control, handleSubmit, reset, formState: { errors } } = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: { title: '', description: '', authorId: '', publishDate: '' }
+    });
 
     const [page, setPage] = useState(1);
     const [pageSize] = useState(10);
@@ -104,18 +120,28 @@ const NovelList = () => {
         deleteMutation.mutate(id);
     };
 
-    const handleSave = (e) => {
-        e.preventDefault();
-        saveMutation.mutate(currentNovel);
+    const onSubmit = (data) => {
+        const novelData = { ...data };
+        if (isEdit) {
+            novelData.id = editingId;
+        }
+        saveMutation.mutate(novelData);
     };
 
     const openModal = (novel = null) => {
         if (novel) {
             setIsEdit(true);
-            setCurrentNovel({ ...novel });
+            setEditingId(novel.id);
+            reset({
+                title: novel.title,
+                description: novel.description || '',
+                authorId: novel.authorId,
+                publishDate: novel.publishDate || ''
+            });
         } else {
             setIsEdit(false);
-            setCurrentNovel({ title: '', description: '', authorId: '', publishDate: '' });
+            setEditingId(null);
+            reset({ title: '', description: '', authorId: '', publishDate: '' });
         }
         setAuthorQuery('');
         setShowModal(true);
@@ -210,20 +236,22 @@ const NovelList = () => {
             {/* Dialog */}
             <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth maxWidth="sm">
                 <DialogTitle>{isEdit ? t('novel.edit') : t('novel.add')}</DialogTitle>
-                <form onSubmit={handleSave}>
+                <form onSubmit={handleSubmit(onSubmit)} noValidate>
                     <DialogContent>
-                        <TextField
+                        <FormTextField
+                            name="title"
+                            control={control}
                             autoFocus
                             margin="dense"
                             label={t('label.title')}
                             type="text"
                             fullWidth
                             variant="outlined"
-                            value={currentNovel.title}
-                            onChange={e => setCurrentNovel({ ...currentNovel, title: e.target.value })}
                             required
                         />
-                        <TextField
+                        <FormTextField
+                            name="description"
+                            control={control}
                             margin="dense"
                             label={t('label.description')}
                             type="text"
@@ -231,38 +259,23 @@ const NovelList = () => {
                             multiline
                             rows={3}
                             variant="outlined"
-                            value={currentNovel.description}
-                            onChange={e => setCurrentNovel({ ...currentNovel, description: e.target.value })}
                         />
-                        <Autocomplete
+                        <FormAutocomplete
+                            name="authorId"
+                            control={control}
                             options={authors}
-                            getOptionLabel={(option) => option.name || ''}
-                            value={authors.find(a => a.id === currentNovel.authorId) || null}
-                            onChange={(event, newValue) => {
-                                setCurrentNovel({ ...currentNovel, authorId: newValue ? newValue.id : '' });
-                            }}
-                            onInputChange={(event, newInputValue) => {
-                                setAuthorQuery(newInputValue);
-                            }}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label={t('label.author')}
-                                    margin="dense"
-                                    variant="outlined"
-                                    required
-                                />
-                            )}
+                            label={t('label.author')}
                         />
-                        <TextField
+                        <FormTextField
+                            name="publishDate"
+                            control={control}
                             margin="dense"
                             label={t('label.publishDate')}
                             type="date"
                             fullWidth
                             variant="outlined"
                             slotProps={{ inputLabel: { shrink: true } }}
-                            value={currentNovel.publishDate}
-                            onChange={e => setCurrentNovel({ ...currentNovel, publishDate: e.target.value })}
+                            required
                         />
                     </DialogContent>
                     <DialogActions>

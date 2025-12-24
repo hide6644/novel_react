@@ -9,6 +9,7 @@ export const profile = {
     "error.passwordMismatch": "Passwords do not match",
     "success.passwordChanged": "Password changed successfully",
     "error.changePasswordFailed": "Failed to change password",
+    "error.currentPasswordIncorrect": "Current password is incorrect",
     "label.currentPassword": "Current Password",
     "label.newPassword": "New Password",
     "label.confirmPassword": "Confirm New Password",

@@ -1,25 +1,36 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Box, Card, CardContent, Button, TextField, Typography, Alert } from '@mui/material';
+import { Box, Card, CardContent, Button, Typography, Alert } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import FormTextField from '../components/common/FormTextField';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const { t } = useTranslation();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const schema = z.object({
+        username: z.string().min(1, t('validate.required')),
+        password: z.string().min(1, t('validate.required'))
+    });
+
+    const { control, handleSubmit } = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: { username: '', password: '' }
+    });
+
+    const onSubmit = async (data) => {
         try {
-            await login(username, password);
+            await login(data.username, data.password);
             navigate('/');
         } catch (err) {
             if (err.response && err.response.status === 403 && err.response.data === "Password expired") {
-                navigate('/change-password', { state: { username } });
+                navigate('/change-password', { state: { username: data.username } });
                 return;
             }
             setError(t('login.failed'));
@@ -36,24 +47,24 @@ const Login = () => {
 
                     {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-                    <Box component="form" onSubmit={handleSubmit}>
-                        <TextField
+                    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+                        <FormTextField
+                            name="username"
+                            control={control}
                             margin="normal"
                             required
                             fullWidth
                             label={t('label.username')}
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
                             autoFocus
                         />
-                        <TextField
+                        <FormTextField
+                            name="password"
+                            control={control}
                             margin="normal"
                             required
                             fullWidth
                             label={t('label.password')}
                             type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
                         />
                         <Button
                             type="submit"

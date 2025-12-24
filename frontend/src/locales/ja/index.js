@@ -1,4 +1,5 @@
 import { common } from './common';
+import { validate } from './validate';
 import { nav } from './nav';
 import { auth } from './auth';
 import { novel } from './novel';
@@ -9,6 +10,7 @@ import { admin } from './admin';
 const ja = {
     translation: {
         ...common,
+        ...validate,
         ...nav,
         ...auth,
         ...novel,

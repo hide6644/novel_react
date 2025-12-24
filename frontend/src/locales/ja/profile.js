@@ -9,6 +9,7 @@ export const profile = {
     "error.passwordMismatch": "パスワードが一致しません",
     "success.passwordChanged": "パスワードを変更しました",
     "error.changePasswordFailed": "パスワードの変更に失敗しました",
+    "error.currentPasswordIncorrect": "現在のパスワードが正しくありません",
     "label.currentPassword": "現在のパスワード",
     "label.newPassword": "新しいパスワード",
     "label.confirmPassword": "新しいパスワード（確認）",

@@ -5,7 +5,6 @@ import { useAuth } from '../context/AuthContext';
 import {
     Box,
     Button,
-    TextField,
     IconButton,
     Dialog,
     DialogTitle,
@@ -23,8 +22,12 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import PageHeader from '../components/common/PageHeader';
 import SearchBox from '../components/common/SearchBox';
+import FormTextField from '../components/common/FormTextField';
 
 const AuthorList = () => {
     const { user } = useAuth();
@@ -39,7 +42,18 @@ const AuthorList = () => {
     // Modal
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const [currentAuthor, setCurrentAuthor] = useState({ name: '', nationality: '', birthDate: '' });
+    const [editingId, setEditingId] = useState(null);
+
+    const schema = z.object({
+        name: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
+        nationality: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
+        birthDate: z.string().optional().nullable()
+    });
+
+    const { control, handleSubmit, reset, formState: { errors } } = useForm({
+        resolver: zodResolver(schema),
+        defaultValues: { name: '', nationality: '', birthDate: '' }
+    });
 
     const { data: authorsData, isLoading: authorsLoading } = useQuery({
         queryKey: ['authors', page, pageSize, appliedSearch],
@@ -88,23 +102,38 @@ const AuthorList = () => {
         setPage(1);
     };
 
+    const handlePageChange = (event, value) => {
+        setPage(value);
+    };
+
     const handleDelete = (id) => {
         if (!window.confirm(t('confirm.delete'))) return;
         deleteMutation.mutate(id);
     };
 
-    const handleSave = (e) => {
-        e.preventDefault();
-        saveMutation.mutate(currentAuthor);
+    const handleSave = (data) => {
+        const authorData = { ...data };
+        if (isEdit) {
+            authorData.id = editingId;
+            saveMutation.mutate(authorData);
+        } else {
+            saveMutation.mutate(authorData);
+        }
     };
 
     const openModal = (author = null) => {
         if (author) {
             setIsEdit(true);
-            setCurrentAuthor({ ...author });
+            setEditingId(author.id);
+            reset({
+                name: author.name,
+                nationality: author.nationality || '',
+                birthDate: author.birthDate || ''
+            });
         } else {
             setIsEdit(false);
-            setCurrentAuthor({ name: '', nationality: '', birthDate: '' });
+            setEditingId(null);
+            reset({ name: '', nationality: '', birthDate: '' });
         }
         setShowModal(true);
     };
@@ -173,7 +202,7 @@ const AuthorList = () => {
                 <Pagination
                     count={totalPages}
                     page={page}
-                    onChange={(e, v) => setPage(v)}
+                    onChange={handlePageChange}
                     color="primary"
                     showFirstButton
                     showLastButton
@@ -182,37 +211,37 @@ const AuthorList = () => {
 
             <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth maxWidth="sm">
                 <DialogTitle>{isEdit ? t('author.edit') : t('author.add')}</DialogTitle>
-                <form onSubmit={handleSave}>
+                <form onSubmit={handleSubmit(handleSave)} noValidate>
                     <DialogContent>
-                        <TextField
+                        <FormTextField
+                            name="name"
+                            control={control}
                             autoFocus
                             margin="dense"
                             label={t('label.name')}
                             type="text"
                             fullWidth
                             variant="outlined"
-                            value={currentAuthor.name}
-                            onChange={e => setCurrentAuthor({ ...currentAuthor, name: e.target.value })}
                             required
                         />
-                        <TextField
+                        <FormTextField
+                            name="nationality"
+                            control={control}
                             margin="dense"
                             label={t('label.nationality')}
                             type="text"
                             fullWidth
                             variant="outlined"
-                            value={currentAuthor.nationality}
-                            onChange={e => setCurrentAuthor({ ...currentAuthor, nationality: e.target.value })}
                         />
-                        <TextField
+                        <FormTextField
+                            name="birthDate"
+                            control={control}
                             margin="dense"
                             label={t('label.birthDate')}
                             type="date"
                             fullWidth
                             variant="outlined"
                             slotProps={{ inputLabel: { shrink: true } }}
-                            value={currentAuthor.birthDate}
-                            onChange={e => setCurrentAuthor({ ...currentAuthor, birthDate: e.target.value })}
                         />
                     </DialogContent>
                     <DialogActions>

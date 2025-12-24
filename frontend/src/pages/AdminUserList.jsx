@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import {
     Box,
@@ -16,24 +17,48 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    TextField,
-    Select,
-    MenuItem,
-    FormControl,
-    InputLabel,
-    Chip
+    Chip,
+    MenuItem
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import PageHeader from '../components/common/PageHeader';
+import FormTextField from '../components/common/FormTextField';
 
 const AdminUserList = () => {
     const queryClient = useQueryClient();
+    const { user: currentUser, checkUser } = useAuth();
     const { t } = useTranslation();
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const [currentUser, setCurrentUser] = useState({ username: '', password: '', role: 'USER', expiryDate: '', firstName: '', lastName: '' });
+    const [editingId, setEditingId] = useState(null);
+
+    const baseSchemaShape = {
+        username: z.string().min(1, t('validate.required')).max(50, t('validate.maxLength', { max: 50 })),
+        firstName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
+        lastName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
+        role: z.string().min(1, t('validate.required')),
+        expiryDate: z.string().optional().nullable()
+    };
+
+    const createSchema = z.object({
+        ...baseSchemaShape,
+        password: z.string().min(4, t('validate.minLength', { min: 4 })).max(100, t('validate.maxLength', { max: 100 }))
+    });
+
+    const editSchema = z.object({
+        ...baseSchemaShape,
+        password: z.string().min(4, t('validate.minLength', { min: 4 })).max(100, t('validate.maxLength', { max: 100 })).optional().or(z.literal(''))
+    });
+
+    const { control, handleSubmit, reset, setError, formState: { errors } } = useForm({
+        resolver: zodResolver(isEdit ? editSchema : createSchema),
+        defaultValues: { username: '', firstName: '', lastName: '', role: 'USER', expiryDate: '', password: '' }
+    });
 
     const { data: users = [], isLoading: usersLoading } = useQuery({
         queryKey: ['admin-users'],
@@ -45,8 +70,11 @@ const AdminUserList = () => {
 
     const deleteMutation = useMutation({
         mutationFn: (id) => api.delete(`/admin/users/${id}`),
-        onSuccess: () => {
+        onSuccess: (_, id) => {
             queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+            if (currentUser && currentUser.id === id) {
+                checkUser();
+            }
         },
     });
 
@@ -62,10 +90,16 @@ const AdminUserList = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-users'] });
             setShowModal(false);
+            if (isEdit && currentUser && currentUser.id === editingId) {
+                checkUser();
+            }
         },
         onError: (error) => {
             if (error.response && error.response.status === 409) {
-                alert(t('error.usernameExists'));
+                setError('username', {
+                    type: 'manual',
+                    message: t('error.usernameExists')
+                });
             } else {
                 alert(t('error.opFailed'));
             }
@@ -77,21 +111,43 @@ const AdminUserList = () => {
         deleteMutation.mutate(id);
     };
 
-    const handleSave = (e) => {
-        e.preventDefault();
-        saveMutation.mutate(currentUser);
+    const handleSave = (data) => {
+        const userData = { ...data };
+        if (isEdit) {
+            if (!userData.password) delete userData.password;
+            userData.id = editingId;
+            saveMutation.mutate(userData);
+        } else {
+            saveMutation.mutate(userData);
+        }
     };
 
     const openModal = (user = null) => {
         if (user) {
             setIsEdit(true);
-            setCurrentUser({ ...user, password: '' });
+            setEditingId(user.id);
+            reset({
+                username: user.username,
+                firstName: user.firstName || '',
+                lastName: user.lastName || '',
+                role: user.role || 'USER',
+                expiryDate: user.expiryDate || '',
+                password: ''
+            });
         } else {
             setIsEdit(false);
+            setEditingId(null);
             const today = new Date();
             today.setFullYear(today.getFullYear() + 1);
             const nextYearStr = today.toISOString().split('T')[0];
-            setCurrentUser({ username: '', password: '', role: 'USER', expiryDate: nextYearStr, firstName: '', lastName: '' });
+            reset({
+                username: '',
+                firstName: '',
+                lastName: '',
+                role: 'USER',
+                expiryDate: nextYearStr,
+                password: ''
+            });
         }
         setShowModal(true);
     };
@@ -155,59 +211,59 @@ const AdminUserList = () => {
             {/* Dialog */}
             <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth maxWidth="xs">
                 <DialogTitle>{isEdit ? t('admin.user.edit') : t('admin.user.add')}</DialogTitle>
-                <form onSubmit={handleSave}>
+                <form onSubmit={handleSubmit(handleSave)} noValidate>
                     <DialogContent>
-                        <TextField
+                        <FormTextField
+                            name="username"
+                            control={control}
                             margin="dense"
                             label={t('label.username')}
                             fullWidth
-                            value={currentUser.username}
-                            onChange={e => setCurrentUser({ ...currentUser, username: e.target.value })}
                             required
                             disabled={isEdit}
                         />
-                        <TextField
+                        <FormTextField
+                            name="lastName"
+                            control={control}
                             margin="dense"
                             label={t('label.lastName')}
                             fullWidth
-                            value={currentUser.lastName || ''}
-                            onChange={e => setCurrentUser({ ...currentUser, lastName: e.target.value })}
                         />
-                        <TextField
+                        <FormTextField
+                            name="firstName"
+                            control={control}
                             margin="dense"
                             label={t('label.firstName')}
                             fullWidth
-                            value={currentUser.firstName || ''}
-                            onChange={e => setCurrentUser({ ...currentUser, firstName: e.target.value })}
                         />
-                        <TextField
+                        <FormTextField
+                            name="password"
+                            control={control}
                             margin="dense"
                             label={isEdit ? t('label.password') + t('label.emptyToKeep') : t('label.password')}
                             type="password"
                             fullWidth
-                            value={currentUser.password || ''}
-                            onChange={e => setCurrentUser({ ...currentUser, password: e.target.value })}
                             required={!isEdit}
                         />
-                        <FormControl fullWidth margin="dense">
-                            <InputLabel>{t('label.role')}</InputLabel>
-                            <Select
-                                value={currentUser.role}
-                                label={t('label.role')}
-                                onChange={e => setCurrentUser({ ...currentUser, role: e.target.value })}
-                            >
-                                <MenuItem value="USER">USER</MenuItem>
-                                <MenuItem value="ADMIN">ADMIN</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField
+                        <FormTextField
+                            select
+                            name="role"
+                            control={control}
+                            margin="dense"
+                            label={t('label.role')}
+                            fullWidth
+                        >
+                            <MenuItem value="USER">USER</MenuItem>
+                            <MenuItem value="ADMIN">ADMIN</MenuItem>
+                        </FormTextField>
+                        <FormTextField
+                            name="expiryDate"
+                            control={control}
                             margin="dense"
                             label={t('label.expiryDate')}
                             type="date"
                             fullWidth
                             slotProps={{ inputLabel: { shrink: true } }}
-                            value={currentUser.expiryDate || ''}
-                            onChange={e => setCurrentUser({ ...currentUser, expiryDate: e.target.value })}
                         />
                     </DialogContent>
                     <DialogActions>
