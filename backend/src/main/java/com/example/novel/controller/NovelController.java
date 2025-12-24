@@ -1,7 +1,7 @@
 package com.example.novel.controller;
 
-import com.example.novel.dto.NovelCreateDto;
-import com.example.novel.dto.NovelDto;
+import com.example.novel.dto.NovelCreateRequest;
+import com.example.novel.dto.NovelResponse;
 import com.example.novel.service.NovelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class NovelController {
     private final NovelService novelService;
 
     @GetMapping
-    public PagedModel<NovelDto> search(@RequestParam(required = false) String title,
+    public PagedModel<NovelResponse> search(@RequestParam(required = false) String title,
             @RequestParam(required = false) String author,
             @PageableDefault(size = 10) Pageable pageable) {
         if (title == null && author == null) {
@@ -31,19 +31,19 @@ public class NovelController {
     }
 
     @GetMapping("/{id}")
-    public NovelDto getNovel(@PathVariable Long id) {
+    public NovelResponse getNovel(@PathVariable Long id) {
         return novelService.getNovel(id);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public NovelDto createNovel(@RequestBody @Valid NovelCreateDto dto) {
+    public NovelResponse createNovel(@RequestBody @Valid NovelCreateRequest dto) {
         return novelService.createNovel(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public NovelDto updateNovel(@PathVariable Long id, @RequestBody @Valid NovelCreateDto dto) {
+    public NovelResponse updateNovel(@PathVariable Long id, @RequestBody @Valid NovelCreateRequest dto) {
         return novelService.updateNovel(id, dto);
     }
 

@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record UserCreateDto(
-        @NotBlank String username,
+public record UserCreateRequest(
+        @NotBlank(message = "Username is required") String username,
         @NotBlank String password,
         @NotNull Role role,
         LocalDate expiryDate,

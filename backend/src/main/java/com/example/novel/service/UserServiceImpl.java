@@ -1,7 +1,7 @@
 package com.example.novel.service;
 
-import com.example.novel.dto.UserCreateDto;
-import com.example.novel.dto.UserDto;
+import com.example.novel.dto.UserCreateRequest;
+import com.example.novel.dto.UserResponse;
 import com.example.novel.entity.User;
 import com.example.novel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +26,15 @@ public class UserServiceImpl implements UserService {
     private int passwordExpirationDays;
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserDto createUser(UserCreateDto dto) {
-        if (userRepository.existsByUsername(dto.username())) {
+    public UserResponse createUser(UserCreateRequest dto) {
+        if (userRepository.findByUsername(dto.username()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
         User user = new User();
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(Long id, UserCreateDto dto) {
+    public UserResponse updateUser(Long id, UserCreateRequest dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         // For update, typically we might not change username or password here, but
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getCurrentUser(String username) {
+    public UserResponse getCurrentUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         return toDto(user);
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateProfile(String username, com.example.novel.dto.UserProfileUpdateDto dto) {
+    public UserResponse updateProfile(String username, com.example.novel.dto.UserProfileUpdateRequest dto) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         user.setFirstName(dto.firstName());
@@ -126,8 +126,9 @@ public class UserServiceImpl implements UserService {
         return toDto(userRepository.save(user));
     }
 
-    private UserDto toDto(User user) {
-        return new UserDto(user.getId(), user.getUsername(), user.getRole(), user.getExpiryDate(), user.getFirstName(),
+    private UserResponse toDto(User user) {
+        return new UserResponse(user.getId(), user.getUsername(), user.getRole(), user.getExpiryDate(),
+                user.getFirstName(),
                 user.getLastName());
     }
 }

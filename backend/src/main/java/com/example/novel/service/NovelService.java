@@ -1,7 +1,7 @@
 package com.example.novel.service;
 
-import com.example.novel.dto.NovelCreateDto;
-import com.example.novel.dto.NovelDto;
+import com.example.novel.dto.NovelCreateRequest;
+import com.example.novel.dto.NovelResponse;
 import com.example.novel.entity.Author;
 import com.example.novel.entity.Novel;
 import com.example.novel.repository.AuthorRepository;
@@ -24,17 +24,17 @@ public class NovelService {
     private final NovelRepository novelRepository;
     private final AuthorRepository authorRepository;
 
-    public Page<NovelDto> search(String title, String authorName, Pageable pageable) {
+    public Page<NovelResponse> search(String title, String authorName, Pageable pageable) {
         return novelRepository.search(title, authorName, pageable)
                 .map(this::toDto);
     }
 
-    public Page<NovelDto> getAllNovels(Pageable pageable) {
+    public Page<NovelResponse> getAllNovels(Pageable pageable) {
         return novelRepository.findAll(pageable)
                 .map(this::toDto);
     }
 
-    public NovelDto createNovel(NovelCreateDto dto) {
+    public NovelResponse createNovel(NovelCreateRequest dto) {
         Long authorId = Objects.requireNonNull(dto.authorId(), "Author ID must not be null");
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
@@ -48,7 +48,7 @@ public class NovelService {
         return toDto(novelRepository.save(novel));
     }
 
-    public NovelDto updateNovel(Long id, NovelCreateDto dto) {
+    public NovelResponse updateNovel(Long id, NovelCreateRequest dto) {
         Novel novel = novelRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
 
@@ -68,14 +68,14 @@ public class NovelService {
         novelRepository.deleteById(id);
     }
 
-    public NovelDto getNovel(Long id) {
+    public NovelResponse getNovel(Long id) {
         Novel novel = novelRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
         return toDto(novel);
     }
 
-    private NovelDto toDto(Novel novel) {
-        return new NovelDto(
+    private NovelResponse toDto(Novel novel) {
+        return new NovelResponse(
                 novel.getId(),
                 novel.getTitle(),
                 novel.getDescription(),

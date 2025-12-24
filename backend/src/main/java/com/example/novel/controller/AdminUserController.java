@@ -1,7 +1,7 @@
 package com.example.novel.controller;
 
-import com.example.novel.dto.UserCreateDto;
-import com.example.novel.dto.UserDto;
+import com.example.novel.dto.UserCreateRequest;
+import com.example.novel.dto.UserResponse;
 import com.example.novel.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +18,17 @@ public class AdminUserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
+    public List<UserResponse> listUsers() {
         return userService.getAllUsers();
     }
 
     @PostMapping
-    public UserDto createUser(@RequestBody @Valid UserCreateDto dto) {
+    public UserResponse createUser(@RequestBody @Valid UserCreateRequest dto) {
         return userService.createUser(dto);
     }
 
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @RequestBody UserCreateDto dto) {
+    public UserResponse updateUser(@PathVariable Long id, @RequestBody @Valid UserCreateRequest dto) {
         return userService.updateUser(id, dto);
     }
 

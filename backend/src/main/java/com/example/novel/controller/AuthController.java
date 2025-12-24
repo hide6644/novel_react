@@ -2,7 +2,7 @@ package com.example.novel.controller;
 
 import com.example.novel.dto.ChangePasswordRequest;
 import com.example.novel.dto.LoginRequest;
-import com.example.novel.dto.UserDto;
+import com.example.novel.dto.UserResponse;
 import com.example.novel.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +28,7 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request,
+    public ResponseEntity<UserResponse> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request,
             HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
@@ -39,7 +39,7 @@ public class AuthController {
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext());
 
-        UserDto user = userService.getCurrentUser(loginRequest.username());
+        UserResponse user = userService.getCurrentUser(loginRequest.username());
         return ResponseEntity.ok(user);
     }
 
@@ -60,7 +60,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getCurrentUser() {
+    public ResponseEntity<UserResponse> getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
             return ResponseEntity.ok(userService.getCurrentUser(auth.getName()));

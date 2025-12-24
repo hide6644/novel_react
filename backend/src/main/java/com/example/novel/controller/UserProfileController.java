@@ -1,13 +1,13 @@
 package com.example.novel.controller;
 
-import com.example.novel.dto.UserDto;
-import com.example.novel.dto.UserProfileUpdateDto;
+import com.example.novel.dto.UserResponse;
+import com.example.novel.dto.UserProfileUpdateRequest;
 import com.example.novel.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class UserProfileController {
     }
 
     @PutMapping("/info")
-    public UserDto updateProfile(@RequestBody UserProfileUpdateDto dto) {
+    public UserResponse updateProfile(@RequestBody UserProfileUpdateRequest dto) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.updateProfile(auth.getName(), dto);
     }

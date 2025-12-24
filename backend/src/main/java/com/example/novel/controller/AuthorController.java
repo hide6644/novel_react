@@ -1,7 +1,7 @@
 package com.example.novel.controller;
 
-import com.example.novel.dto.AuthorCreateDto;
-import com.example.novel.dto.AuthorDto;
+import com.example.novel.dto.AuthorCreateRequest;
+import com.example.novel.dto.AuthorResponse;
 import com.example.novel.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping
-    public List<AuthorDto> getAllAuthors(@RequestParam(required = false) String name) {
+    public List<AuthorResponse> getAllAuthors(@RequestParam(required = false) String name) {
         if (name != null) {
             return authorService.searchAuthors(name);
         }
@@ -28,24 +28,24 @@ public class AuthorController {
     }
 
     @GetMapping("/page")
-    public PagedModel<AuthorDto> getAuthorsPaginated(@PageableDefault(size = 10) Pageable pageable) {
+    public PagedModel<AuthorResponse> getAuthorsPaginated(@PageableDefault(size = 10) Pageable pageable) {
         return new PagedModel<>(authorService.getAllAuthors(pageable));
     }
 
     @GetMapping("/{id}")
-    public AuthorDto getAuthor(@PathVariable Long id) {
+    public AuthorResponse getAuthor(@PathVariable Long id) {
         return authorService.getAuthor(id);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public AuthorDto createAuthor(@RequestBody @Valid AuthorCreateDto dto) {
+    public AuthorResponse createAuthor(@RequestBody @Valid AuthorCreateRequest dto) {
         return authorService.createAuthor(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public AuthorDto updateAuthor(@PathVariable Long id, @RequestBody @Valid AuthorCreateDto dto) {
+    public AuthorResponse updateAuthor(@PathVariable Long id, @RequestBody @Valid AuthorCreateRequest dto) {
         return authorService.updateAuthor(id, dto);
     }
 

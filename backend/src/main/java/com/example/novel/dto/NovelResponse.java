@@ -2,7 +2,7 @@ package com.example.novel.dto;
 
 import java.time.LocalDate;
 
-public record NovelDto(
+public record NovelResponse(
         Long id,
         String title,
         String description,

@@ -1,6 +1,6 @@
 package com.example.novel.dto;
 
-public record UserProfileUpdateDto(
+public record UserProfileUpdateRequest(
         String firstName,
         String lastName) {
 }
