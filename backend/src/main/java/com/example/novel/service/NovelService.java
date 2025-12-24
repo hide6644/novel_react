@@ -1,12 +1,11 @@
 package com.example.novel.service;
 
-import com.example.novel.dto.NovelCreateRequest;
+import com.example.novel.dto.NovelRequest;
 import com.example.novel.dto.NovelResponse;
 import com.example.novel.entity.Author;
 import com.example.novel.entity.Novel;
 import com.example.novel.repository.AuthorRepository;
 import com.example.novel.repository.NovelRepository;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -34,9 +33,8 @@ public class NovelService {
                 .map(this::toDto);
     }
 
-    public NovelResponse create(NovelCreateRequest dto) {
-        Long authorId = Objects.requireNonNull(dto.authorId(), "Author ID must not be null");
-        Author author = authorRepository.findById(authorId)
+    public NovelResponse create(NovelRequest dto) {
+        Author author = authorRepository.findById(dto.authorId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
 
         Novel novel = new Novel();
@@ -48,12 +46,11 @@ public class NovelService {
         return toDto(novelRepository.save(novel));
     }
 
-    public NovelResponse update(Long id, NovelCreateRequest dto) {
+    public NovelResponse update(Long id, NovelRequest dto) {
         Novel novel = novelRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
 
-        Long authorId = Objects.requireNonNull(dto.authorId(), "Author ID must not be null");
-        Author author = authorRepository.findById(authorId)
+        Author author = authorRepository.findById(dto.authorId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
 
         novel.setTitle(dto.title());

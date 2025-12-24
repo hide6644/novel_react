@@ -12,8 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @org.springframework.beans.factory.annotation.Value("${app.security.password-expiration-days:90}")
+    @Value("${app.security.password-expiration-days:90}")
     private int passwordExpirationDays;
 
     @Override
@@ -52,7 +55,7 @@ public class UserServiceImpl implements UserService {
         if (dto.expiryDate() != null) {
             user.setExpiryDate(dto.expiryDate());
         } else {
-            user.setExpiryDate(java.time.LocalDate.now().plusDays(passwordExpirationDays));
+            user.setExpiryDate(LocalDate.now().plusDays(passwordExpirationDays));
         }
 
         user.setFirstName(dto.firstName());
@@ -69,7 +72,7 @@ public class UserServiceImpl implements UserService {
         // If password is provided and not empty, update it.
         if (dto.password() != null && !dto.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
-            user.setExpiryDate(java.time.LocalDate.now().plusDays(passwordExpirationDays));
+            user.setExpiryDate(LocalDate.now().plusDays(passwordExpirationDays));
         }
         user.setRole(dto.role());
         if (dto.expiryDate() != null) {
@@ -102,7 +105,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setExpiryDate(java.time.LocalDate.now().plusDays(passwordExpirationDays));
+        user.setExpiryDate(LocalDate.now().plusDays(passwordExpirationDays));
         userRepository.save(user);
     }
 
@@ -116,7 +119,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(dto.newPassword()));
-        user.setExpiryDate(java.time.LocalDate.now().plusDays(passwordExpirationDays));
+        user.setExpiryDate(LocalDate.now().plusDays(passwordExpirationDays));
         userRepository.save(user);
     }
 

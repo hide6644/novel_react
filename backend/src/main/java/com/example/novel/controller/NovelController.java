@@ -1,6 +1,6 @@
 package com.example.novel.controller;
 
-import com.example.novel.dto.NovelCreateRequest;
+import com.example.novel.dto.NovelRequest;
 import com.example.novel.dto.NovelResponse;
 import com.example.novel.service.NovelService;
 import jakarta.validation.Valid;
@@ -37,13 +37,13 @@ public class NovelController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public NovelResponse create(@RequestBody @Valid NovelCreateRequest dto) {
+    public NovelResponse create(@RequestBody @Valid NovelRequest dto) {
         return novelService.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public NovelResponse update(@PathVariable Long id, @RequestBody @Valid NovelCreateRequest dto) {
+    public NovelResponse update(@PathVariable Long id, @RequestBody @Valid NovelRequest dto) {
         return novelService.update(id, dto);
     }
 
