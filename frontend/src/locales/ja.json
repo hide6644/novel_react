@@ -28,7 +28,8 @@
         "required": "必須項目です",
         "minLength": "{{min}}文字以上で入力してください",
         "maxLength": "{{max}}文字以内で入力してください",
-        "select": "選択してください"
+        "select": "選択してください",
+        "futureDate": "過去の日付を入力してください"
     },
     "nav": {
         "login": "ログイン",

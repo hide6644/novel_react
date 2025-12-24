@@ -28,7 +28,8 @@
         "required": "Required field",
         "minLength": "Must be {{min}} characters or more",
         "maxLength": "Must be {{max}} characters or less",
-        "select": "Please select"
+        "select": "Please select",
+        "futureDate": "Must be a past date"
     },
     "nav": {
         "login": "Login",

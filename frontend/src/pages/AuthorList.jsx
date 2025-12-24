@@ -47,7 +47,10 @@ const AuthorList = () => {
     const schema = z.object({
         name: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
         nationality: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
-        birthDate: z.string().optional().nullable()
+        birthDate: z.string().optional().nullable().refine((val) => {
+            if (!val) return true;
+            return new Date(val) <= new Date();
+        }, t('validate.futureDate'))
     });
 
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
