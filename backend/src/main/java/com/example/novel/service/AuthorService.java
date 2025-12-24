@@ -19,24 +19,29 @@ import java.util.stream.Collectors;
 public class AuthorService {
     private final AuthorRepository authorRepository;
 
-    public List<AuthorResponse> getAllAuthors() {
+    public List<AuthorResponse> getAll() {
         return authorRepository.findAll().stream()
-                .map(a -> new AuthorResponse(a.getId(), a.getName(), a.getBirthDate(), a.getNationality()))
+                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public List<AuthorResponse> searchAuthors(String name) {
-        return authorRepository.findByNameContainingIgnoreCase(name).stream()
-                .map(a -> new AuthorResponse(a.getId(), a.getName(), a.getBirthDate(), a.getNationality()))
-                .collect(Collectors.toList());
-    }
-
-    public Page<AuthorResponse> getAllAuthors(Pageable pageable) {
+    public Page<AuthorResponse> getAll(Pageable pageable) {
         return authorRepository.findAll(pageable)
-                .map(a -> new AuthorResponse(a.getId(), a.getName(), a.getBirthDate(), a.getNationality()));
+                .map(this::toDto);
     }
 
-    public AuthorResponse createAuthor(AuthorCreateRequest dto) {
+    public List<AuthorResponse> searchByName(String name) {
+        return authorRepository.findByNameContainingIgnoreCase(name).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public Page<AuthorResponse> searchByName(String name, Pageable pageable) {
+        return authorRepository.findByNameContainingIgnoreCase(name, pageable)
+                .map(this::toDto);
+    }
+
+    public AuthorResponse create(AuthorCreateRequest dto) {
         Author author = new Author();
         author.setName(dto.name());
         author.setBirthDate(dto.birthDate());
@@ -44,7 +49,7 @@ public class AuthorService {
         return toDto(authorRepository.save(author));
     }
 
-    public AuthorResponse updateAuthor(Long id, AuthorCreateRequest dto) {
+    public AuthorResponse update(Long id, AuthorCreateRequest dto) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
         author.setName(dto.name());
@@ -53,11 +58,11 @@ public class AuthorService {
         return toDto(authorRepository.save(author));
     }
 
-    public void deleteAuthor(Long id) {
+    public void delete(Long id) {
         authorRepository.deleteById(id);
     }
 
-    public AuthorResponse getAuthor(Long id) {
+    public AuthorResponse get(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
         return toDto(author);

@@ -34,7 +34,6 @@ const AuthorList = () => {
     const queryClient = useQueryClient();
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
-    const [appliedSearch, setAppliedSearch] = useState('');
 
     const [page, setPage] = useState(1);
     const [pageSize] = useState(10);
@@ -59,17 +58,14 @@ const AuthorList = () => {
     });
 
     const { data: authorsData, isLoading: authorsLoading } = useQuery({
-        queryKey: ['authors', page, pageSize, appliedSearch],
+        queryKey: ['authors', page, pageSize, searchQuery],
         queryFn: async () => {
-            if (appliedSearch) {
-                const res = await api.get('/authors', { params: { name: appliedSearch } });
-                // If backend search returns a List, we wrap it into a Page-like structure for the UI
-                return {
-                    content: res.data,
-                    totalPages: 1
-                };
-            }
-            const res = await api.get('/authors/page', { params: { page: page - 1, size: pageSize } });
+            const params = {
+                page: page - 1,
+                size: pageSize,
+                name: searchQuery
+            };
+            const res = await api.get('/authors', { params });
             return res.data;
         },
     });

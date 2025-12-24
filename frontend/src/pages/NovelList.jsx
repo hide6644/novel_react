@@ -78,7 +78,7 @@ const NovelList = () => {
         queryKey: ['authors', authorQuery],
         queryFn: async () => {
             const params = authorQuery ? { name: authorQuery } : {};
-            const res = await api.get('/authors', { params });
+            const res = await api.get('/authors/autocomplete', { params });
             return res.data;
         },
     });

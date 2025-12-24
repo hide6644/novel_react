@@ -25,32 +25,32 @@ public class NovelController {
             @RequestParam(required = false) String author,
             @PageableDefault(size = 10) Pageable pageable) {
         if (title == null && author == null) {
-            return new PagedModel<>(novelService.getAllNovels(pageable));
+            return new PagedModel<>(novelService.getAll(pageable));
         }
-        return new PagedModel<>(novelService.search(title, author, pageable));
+        return new PagedModel<>(novelService.searchByTitleAndAuthorName(title, author, pageable));
     }
 
     @GetMapping("/{id}")
-    public NovelResponse getNovel(@PathVariable Long id) {
-        return novelService.getNovel(id);
+    public NovelResponse get(@PathVariable Long id) {
+        return novelService.get(id);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public NovelResponse createNovel(@RequestBody @Valid NovelCreateRequest dto) {
-        return novelService.createNovel(dto);
+    public NovelResponse create(@RequestBody @Valid NovelCreateRequest dto) {
+        return novelService.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public NovelResponse updateNovel(@PathVariable Long id, @RequestBody @Valid NovelCreateRequest dto) {
-        return novelService.updateNovel(id, dto);
+    public NovelResponse update(@PathVariable Long id, @RequestBody @Valid NovelCreateRequest dto) {
+        return novelService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteNovel(@PathVariable Long id) {
-        novelService.deleteNovel(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        novelService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

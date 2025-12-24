@@ -1,23 +1,27 @@
 package com.example.novel.service;
 
+import com.example.novel.dto.ChangePasswordRequest;
 import com.example.novel.dto.UserCreateRequest;
+import com.example.novel.dto.UserProfileUpdateRequest;
 import com.example.novel.dto.UserResponse;
+import com.example.novel.dto.UserUpdateRequest;
+
 import java.util.List;
 
 public interface UserService {
-    List<UserResponse> getAllUsers();
+    List<UserResponse> getAll();
 
-    UserResponse createUser(UserCreateRequest dto);
+    UserResponse create(UserCreateRequest dto);
 
-    UserResponse updateUser(Long id, UserCreateRequest dto);
+    UserResponse update(Long id, UserUpdateRequest dto);
 
-    void deleteUser(Long id);
+    void delete(Long id);
 
-    UserResponse getCurrentUser(String username);
+    UserResponse searchByUsername(String username);
 
     void changePassword(String username, String oldPassword, String newPassword);
 
-    void processPasswordChange(com.example.novel.dto.ChangePasswordRequest request);
+    void changePassword(ChangePasswordRequest dto);
 
-    UserResponse updateProfile(String username, com.example.novel.dto.UserProfileUpdateRequest dto);
+    UserResponse updateProfile(String username, UserProfileUpdateRequest dto);
 }

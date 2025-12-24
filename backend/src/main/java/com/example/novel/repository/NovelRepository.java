@@ -11,5 +11,6 @@ public interface NovelRepository extends JpaRepository<Novel, Long> {
     @Query("SELECT n FROM Novel n WHERE " +
             "(:title IS NULL OR LOWER(n.title) LIKE LOWER(CONCAT('%', :title, '%'))) AND " +
             "(:authorName IS NULL OR LOWER(n.author.name) LIKE LOWER(CONCAT('%', :authorName, '%')))")
-    Page<Novel> search(@Param("title") String title, @Param("authorName") String authorName, Pageable pageable);
+    Page<Novel> searchByTitleAndAuthorName(@Param("title") String title, @Param("authorName") String authorName,
+            Pageable pageable);
 }

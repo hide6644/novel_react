@@ -39,13 +39,13 @@ public class AuthController {
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext());
 
-        UserResponse user = userService.getCurrentUser(loginRequest.username());
+        UserResponse user = userService.searchByUsername(loginRequest.username());
         return ResponseEntity.ok(user);
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
-        userService.processPasswordChange(request);
+    public ResponseEntity<Void> changePassword(@RequestBody @Valid ChangePasswordRequest dto) {
+        userService.changePassword(dto);
         return ResponseEntity.ok().build();
     }
 
@@ -63,7 +63,7 @@ public class AuthController {
     public ResponseEntity<UserResponse> getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
-            return ResponseEntity.ok(userService.getCurrentUser(auth.getName()));
+            return ResponseEntity.ok(userService.searchByUsername(auth.getName()));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

@@ -2,6 +2,7 @@ package com.example.novel.controller;
 
 import com.example.novel.dto.UserCreateRequest;
 import com.example.novel.dto.UserResponse;
+import com.example.novel.dto.UserUpdateRequest;
 import com.example.novel.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,23 +19,23 @@ public class AdminUserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserResponse> listUsers() {
-        return userService.getAllUsers();
+    public List<UserResponse> getAll() {
+        return userService.getAll();
     }
 
     @PostMapping
-    public UserResponse createUser(@RequestBody @Valid UserCreateRequest dto) {
-        return userService.createUser(dto);
+    public UserResponse create(@RequestBody @Valid UserCreateRequest dto) {
+        return userService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public UserResponse updateUser(@PathVariable Long id, @RequestBody @Valid UserCreateRequest dto) {
-        return userService.updateUser(id, dto);
+    public UserResponse update(@PathVariable Long id, @RequestBody @Valid UserUpdateRequest dto) {
+        return userService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

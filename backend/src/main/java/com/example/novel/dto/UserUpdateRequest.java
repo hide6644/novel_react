@@ -5,9 +5,9 @@ import java.time.LocalDate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record UserCreateRequest(
+public record UserUpdateRequest(
         @NotBlank String username,
-        @NotBlank String password,
+        String password,
         @NotNull Role role,
         LocalDate expiryDate,
         String firstName,

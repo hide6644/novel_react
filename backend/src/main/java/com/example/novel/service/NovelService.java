@@ -24,17 +24,17 @@ public class NovelService {
     private final NovelRepository novelRepository;
     private final AuthorRepository authorRepository;
 
-    public Page<NovelResponse> search(String title, String authorName, Pageable pageable) {
-        return novelRepository.search(title, authorName, pageable)
-                .map(this::toDto);
-    }
-
-    public Page<NovelResponse> getAllNovels(Pageable pageable) {
+    public Page<NovelResponse> getAll(Pageable pageable) {
         return novelRepository.findAll(pageable)
                 .map(this::toDto);
     }
 
-    public NovelResponse createNovel(NovelCreateRequest dto) {
+    public Page<NovelResponse> searchByTitleAndAuthorName(String title, String authorName, Pageable pageable) {
+        return novelRepository.searchByTitleAndAuthorName(title, authorName, pageable)
+                .map(this::toDto);
+    }
+
+    public NovelResponse create(NovelCreateRequest dto) {
         Long authorId = Objects.requireNonNull(dto.authorId(), "Author ID must not be null");
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
@@ -48,7 +48,7 @@ public class NovelService {
         return toDto(novelRepository.save(novel));
     }
 
-    public NovelResponse updateNovel(Long id, NovelCreateRequest dto) {
+    public NovelResponse update(Long id, NovelCreateRequest dto) {
         Novel novel = novelRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
 
@@ -64,11 +64,11 @@ public class NovelService {
         return toDto(novelRepository.save(novel));
     }
 
-    public void deleteNovel(Long id) {
+    public void delete(Long id) {
         novelRepository.deleteById(id);
     }
 
-    public NovelResponse getNovel(Long id) {
+    public NovelResponse get(Long id) {
         Novel novel = novelRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Novel not found"));
         return toDto(novel);

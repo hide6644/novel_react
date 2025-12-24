@@ -19,39 +19,43 @@ import java.util.List;
 public class AuthorController {
     private final AuthorService authorService;
 
-    @GetMapping
-    public List<AuthorResponse> getAllAuthors(@RequestParam(required = false) String name) {
-        if (name != null) {
-            return authorService.searchAuthors(name);
+    @GetMapping("/autocomplete")
+    public List<AuthorResponse> search(@RequestParam(required = false) String name) {
+        if (name == null) {
+            return authorService.getAll();
         }
-        return authorService.getAllAuthors();
+        return authorService.searchByName(name);
     }
 
-    @GetMapping("/page")
-    public PagedModel<AuthorResponse> getAuthorsPaginated(@PageableDefault(size = 10) Pageable pageable) {
-        return new PagedModel<>(authorService.getAllAuthors(pageable));
+    @GetMapping
+    public PagedModel<AuthorResponse> search(@RequestParam(required = false) String name,
+            @PageableDefault(size = 10) Pageable pageable) {
+        if (name == null) {
+            return new PagedModel<>(authorService.getAll(pageable));
+        }
+        return new PagedModel<>(authorService.searchByName(name, pageable));
     }
 
     @GetMapping("/{id}")
-    public AuthorResponse getAuthor(@PathVariable Long id) {
-        return authorService.getAuthor(id);
+    public AuthorResponse get(@PathVariable Long id) {
+        return authorService.get(id);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public AuthorResponse createAuthor(@RequestBody @Valid AuthorCreateRequest dto) {
-        return authorService.createAuthor(dto);
+    public AuthorResponse create(@RequestBody @Valid AuthorCreateRequest dto) {
+        return authorService.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public AuthorResponse updateAuthor(@PathVariable Long id, @RequestBody @Valid AuthorCreateRequest dto) {
-        return authorService.updateAuthor(id, dto);
+    public AuthorResponse update(@PathVariable Long id, @RequestBody @Valid AuthorCreateRequest dto) {
+        return authorService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteAuthor(@PathVariable Long id) {
-        authorService.deleteAuthor(id);
+    public void delete(@PathVariable Long id) {
+        authorService.delete(id);
     }
 }

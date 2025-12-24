@@ -1,7 +1,10 @@
 package com.example.novel.service;
 
+import com.example.novel.dto.ChangePasswordRequest;
 import com.example.novel.dto.UserCreateRequest;
+import com.example.novel.dto.UserProfileUpdateRequest;
 import com.example.novel.dto.UserResponse;
+import com.example.novel.dto.UserUpdateRequest;
 import com.example.novel.entity.User;
 import com.example.novel.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +29,14 @@ public class UserServiceImpl implements UserService {
     private int passwordExpirationDays;
 
     @Override
-    public List<UserResponse> getAllUsers() {
+    public List<UserResponse> getAll() {
         return userRepository.findAll().stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserResponse createUser(UserCreateRequest dto) {
+    public UserResponse create(UserCreateRequest dto) {
         if (userRepository.findByUsername(dto.username()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
@@ -58,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(Long id, UserCreateRequest dto) {
+    public UserResponse update(Long id, UserUpdateRequest dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         // For update, typically we might not change username or password here, but
@@ -78,12 +81,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
         userRepository.deleteById(id);
     }
 
     @Override
-    public UserResponse getCurrentUser(String username) {
+    public UserResponse searchByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         return toDto(user);
@@ -104,21 +107,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void processPasswordChange(com.example.novel.dto.ChangePasswordRequest request) {
-        User user = userRepository.findByUsername(request.username())
+    public void changePassword(ChangePasswordRequest dto) {
+        User user = userRepository.findByUsername(dto.username())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(dto.currentPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid current password");
         }
 
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        user.setPassword(passwordEncoder.encode(dto.newPassword()));
         user.setExpiryDate(java.time.LocalDate.now().plusDays(passwordExpirationDays));
         userRepository.save(user);
     }
 
     @Override
-    public UserResponse updateProfile(String username, com.example.novel.dto.UserProfileUpdateRequest dto) {
+    public UserResponse updateProfile(String username, UserProfileUpdateRequest dto) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         user.setFirstName(dto.firstName());
