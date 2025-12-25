@@ -20,6 +20,7 @@ import {
     Chip,
     MenuItem
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
@@ -198,7 +199,7 @@ const AdminUserList = () => {
                                     <IconButton color="primary" onClick={() => openModal(row)}>
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton color="error" onClick={() => handleDelete(row.id)}>
+                                    <IconButton color="error" onClick={() => handleDelete(row.id)} disabled={deleteMutation.isPending}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </TableCell>
@@ -268,7 +269,13 @@ const AdminUserList = () => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setShowModal(false)}>{t('common.btn.cancel')}</Button>
-                        <Button type="submit" variant="contained">{t('common.btn.save')}</Button>
+                        <LoadingButton
+                            type="submit"
+                            variant="contained"
+                            loading={saveMutation.isPending}
+                        >
+                            {t('common.btn.save')}
+                        </LoadingButton>
                     </DialogActions>
                 </form>
             </Dialog>

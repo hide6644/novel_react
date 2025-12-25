@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Card, CardContent, Button, Typography, Alert } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,7 +26,7 @@ const ChangePassword = () => {
         path: ["confirmPassword"],
     });
 
-    const { control, handleSubmit, setValue } = useForm({
+    const { control, handleSubmit, formState: { isSubmitting } } = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
             username: location.state?.username || '',
@@ -105,15 +106,16 @@ const ChangePassword = () => {
                             label={t('user.label.confirmPassword')}
                             type="password"
                         />
-                        <Button
+                        <LoadingButton
                             type="submit"
                             fullWidth
                             variant="contained"
                             size="large"
                             sx={{ mt: 3, mb: 2 }}
+                            loading={isSubmitting}
                         >
                             {t('profile.changePassword.btn')}
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 </CardContent>
             </Card>

@@ -21,6 +21,7 @@ import {
     DialogActions,
     Pagination
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
@@ -212,7 +213,7 @@ const NovelList = () => {
                                     <IconButton color="primary" onClick={() => openModal(novel)}>
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton color="error" onClick={() => handleDelete(novel.id)}>
+                                    <IconButton color="error" onClick={() => handleDelete(novel.id)} disabled={deleteMutation.isPending}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </CardActions>
@@ -280,7 +281,13 @@ const NovelList = () => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setShowModal(false)}>{t('common.btn.cancel')}</Button>
-                        <Button type="submit" variant="contained">{t('common.btn.save')}</Button>
+                        <LoadingButton
+                            type="submit"
+                            variant="contained"
+                            loading={saveMutation.isPending}
+                        >
+                            {t('common.btn.save')}
+                        </LoadingButton>
                     </DialogActions>
                 </form>
             </Dialog>

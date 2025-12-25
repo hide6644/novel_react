@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Box, Card, CardContent, Button, Typography, Alert } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,7 +20,7 @@ const Login = () => {
         password: z.string().min(1, t('validate.required'))
     });
 
-    const { control, handleSubmit } = useForm({
+    const { control, handleSubmit, formState: { isSubmitting } } = useForm({
         resolver: zodResolver(schema),
         defaultValues: { username: '', password: '' }
     });
@@ -66,15 +67,16 @@ const Login = () => {
                             label={t('user.label.password')}
                             type="password"
                         />
-                        <Button
+                        <LoadingButton
                             type="submit"
                             fullWidth
                             variant="contained"
                             size="large"
                             sx={{ mt: 3, mb: 2 }}
+                            loading={isSubmitting}
                         >
                             {t('auth.btn.login')}
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 </CardContent>
             </Card>

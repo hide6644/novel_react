@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { Box, Card, CardContent, Typography, Button, Alert, Grid } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,7 +23,7 @@ const Profile = () => {
         lastName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional()
     });
 
-    const { control: profileControl, handleSubmit: handleProfileSubmit, reset: resetProfile } = useForm({
+    const { control: profileControl, handleSubmit: handleProfileSubmit, reset: resetProfile, formState: { isSubmitting: isProfileSubmitting } } = useForm({
         resolver: zodResolver(profileSchema),
         defaultValues: { firstName: '', lastName: '' }
     });
@@ -33,7 +34,7 @@ const Profile = () => {
         newPassword: z.string().min(4, t('validate.minLength', { min: 4 })).max(100, t('validate.maxLength', { max: 100 }))
     });
 
-    const { control: passwordControl, handleSubmit: handlePasswordSubmit, reset: resetPassword, setError: setPasswordError } = useForm({
+    const { control: passwordControl, handleSubmit: handlePasswordSubmit, reset: resetPassword, setError: setPasswordError, formState: { isSubmitting: isPasswordSubmitting } } = useForm({
         resolver: zodResolver(passwordSchema),
         defaultValues: { currentPassword: '', newPassword: '' }
     });
@@ -125,9 +126,9 @@ const Profile = () => {
                                 <Typography variant="body1">{user.expiryDate}</Typography>
                             </Grid>
                             <Grid size={12}>
-                                <Button type="submit" variant="contained">
+                                <LoadingButton type="submit" variant="contained" loading={isProfileSubmitting}>
                                     {t('common.btn.save')}
-                                </Button>
+                                </LoadingButton>
                             </Grid>
                         </Grid>
                     </Box>
@@ -162,9 +163,14 @@ const Profile = () => {
                             required
                             sx={{ mb: 2 }}
                         />
-                        <Button type="submit" variant="contained" color="secondary">
+                        <LoadingButton
+                            type="submit"
+                            variant="contained"
+                            color="secondary"
+                            loading={isPasswordSubmitting}
+                        >
                             {t('profile.updatePassword.btn')}
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 </CardContent>
             </Card>
