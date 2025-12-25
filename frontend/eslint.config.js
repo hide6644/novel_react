@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import react from 'eslint-plugin-react';
+import reactCompiler from 'eslint-plugin-react-compiler';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 
@@ -26,6 +27,7 @@ export default [
             react,
             'react-hooks': reactHooks,
             'react-refresh': reactRefresh,
+            'react-compiler': reactCompiler,
         },
 
         rules: {
@@ -40,6 +42,7 @@ export default [
                 'warn',
                 { allowConstantExport: true },
             ],
+            'react-compiler/react-compiler': 'error',
         },
     },
 ];
