@@ -1,6 +1,6 @@
 package com.example.novel.controller;
 
-import com.example.novel.dto.AuthorCreateRequest;
+import com.example.novel.dto.AuthorRequest;
 import com.example.novel.dto.AuthorResponse;
 import com.example.novel.service.AuthorService;
 import jakarta.validation.Valid;
@@ -43,13 +43,13 @@ public class AuthorController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public AuthorResponse create(@RequestBody @Valid AuthorCreateRequest dto) {
+    public AuthorResponse create(@RequestBody @Valid AuthorRequest dto) {
         return authorService.create(dto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public AuthorResponse update(@PathVariable Long id, @RequestBody @Valid AuthorCreateRequest dto) {
+    public AuthorResponse update(@PathVariable Long id, @RequestBody @Valid AuthorRequest dto) {
         return authorService.update(id, dto);
     }
 

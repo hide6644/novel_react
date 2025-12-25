@@ -61,10 +61,7 @@ const Profile = () => {
 
     const onPasswordChange = async (data) => {
         try {
-            await api.put('/profile/password', {
-                currentPassword: data.currentPassword,
-                newPassword: data.newPassword
-            });
+            await api.put('/profile/password', data);
             setMessage(t('profile.updatePassword.success'));
             setIsError(false);
             resetPassword();

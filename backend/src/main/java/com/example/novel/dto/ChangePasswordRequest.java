@@ -1,7 +1,8 @@
 package com.example.novel.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record ChangePasswordRequest(
-        String username,
-        String currentPassword,
-        String newPassword) {
+        @NotBlank String currentPassword,
+        @NotBlank String newPassword) {
 }

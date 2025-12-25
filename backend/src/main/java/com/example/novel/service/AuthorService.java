@@ -1,6 +1,6 @@
 package com.example.novel.service;
 
-import com.example.novel.dto.AuthorCreateRequest;
+import com.example.novel.dto.AuthorRequest;
 import com.example.novel.dto.AuthorResponse;
 import com.example.novel.entity.Author;
 import com.example.novel.repository.AuthorRepository;
@@ -41,7 +41,7 @@ public class AuthorService {
                 .map(this::toDto);
     }
 
-    public AuthorResponse create(AuthorCreateRequest dto) {
+    public AuthorResponse create(AuthorRequest dto) {
         Author author = new Author();
         author.setName(dto.name());
         author.setBirthDate(dto.birthDate());
@@ -49,7 +49,7 @@ public class AuthorService {
         return toDto(authorRepository.save(author));
     }
 
-    public AuthorResponse update(Long id, AuthorCreateRequest dto) {
+    public AuthorResponse update(Long id, AuthorRequest dto) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
         author.setName(dto.name());

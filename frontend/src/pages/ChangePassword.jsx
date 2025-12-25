@@ -40,8 +40,7 @@ const ChangePassword = () => {
         setSuccess('');
 
         try {
-            await api.post('/auth/change-password', {
-                username: data.username,
+            await api.put(`/auth/change-password/${data.username}`, {
                 currentPassword: data.currentPassword,
                 newPassword: data.newPassword
             });

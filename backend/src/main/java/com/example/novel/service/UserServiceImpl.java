@@ -96,22 +96,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String username, String currentPassword, String newPassword) {
+    public void changePassword(String username, ChangePasswordRequest dto) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-
-        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid current password");
-        }
-
-        user.setPassword(passwordEncoder.encode(newPassword));
-        user.setExpiryDate(LocalDate.now().plusDays(passwordExpirationDays));
-        userRepository.save(user);
-    }
-
-    @Override
-    public void changePassword(ChangePasswordRequest dto) {
-        User user = userRepository.findByUsername(dto.username())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (!passwordEncoder.matches(dto.currentPassword(), user.getPassword())) {

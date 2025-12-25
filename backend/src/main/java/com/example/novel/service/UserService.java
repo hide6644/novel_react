@@ -19,9 +19,7 @@ public interface UserService {
 
     UserResponse searchByUsername(String username);
 
-    void changePassword(String username, String oldPassword, String newPassword);
-
-    void changePassword(ChangePasswordRequest dto);
+    void changePassword(String username, ChangePasswordRequest dto);
 
     UserResponse updateProfile(String username, UserProfileUpdateRequest dto);
 }
