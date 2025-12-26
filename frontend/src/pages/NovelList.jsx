@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -24,25 +24,19 @@ import {
 import { LoadingButton } from '@mui/lab';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SearchIcon from '@mui/icons-material/Search';
+import SearchBox from '../components/common/SearchBox';
 import { useTranslation } from 'react-i18next';
 import PageHeader from '../components/common/PageHeader';
 import FormTextField from '../components/common/FormTextField';
 import FormAutocomplete from '../components/common/FormAutocomplete';
+import useCrud from '../hooks/useCrud';
 
 const NovelList = () => {
     const { user } = useAuth();
-    const queryClient = useQueryClient();
     const { t } = useTranslation();
 
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
-    const [searchParams, setSearchParams] = useState({ title: '', author: '' });
-
-    // Modal State
-    const [showModal, setShowModal] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [editingId, setEditingId] = useState(null);
     const [authorQuery, setAuthorQuery] = useState('');
 
     const schema = z.object({
@@ -57,21 +51,28 @@ const NovelList = () => {
         defaultValues: { title: '', description: '', authorId: '', publishDate: '' }
     });
 
-    const [page, setPage] = useState(1);
-    const [pageSize] = useState(10);
-
-    // Fetch Novels
-    const { data: novelsData, isLoading: novelsLoading } = useQuery({
-        queryKey: ['novels', page, pageSize, searchParams],
-        queryFn: async () => {
-            const params = {
-                page: page - 1,
-                size: pageSize,
-                ...searchParams
-            };
-            const res = await api.get('/novels', { params });
-            return res.data;
-        },
+    // useCrud Hook
+    const {
+        page,
+        items: novels,
+        totalPages,
+        isLoading: novelsLoading,
+        handlePageChange,
+        handleDelete,
+        openModal: openCrudModal,
+        closeModal,
+        handleSave,
+        showModal,
+        isEdit,
+        deleteMutation,
+        saveMutation,
+        handleSearch: applySearch
+    } = useCrud({
+        queryKey: ['novels'],
+        fetchPath: '/novels',
+        deletePath: '/novels',
+        savePath: '/novels',
+        defaultSearchParams: { title: '', author: '' },
     });
 
     // Fetch Authors for Autocomplete
@@ -84,72 +85,25 @@ const NovelList = () => {
         },
     });
 
-    const deleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/novels/${id}`),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['novels'] });
-        },
-    });
-
-    const saveMutation = useMutation({
-        mutationFn: (novel) => {
-            if (isEdit) {
-                return api.put(`/novels/${novel.id}`, novel);
-            }
-            return api.post('/novels', novel);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['novels'] });
-            setShowModal(false);
-        },
-        onError: () => {
-            alert(t('common.error.opFailed'));
-        }
-    });
-
     const handleSearch = () => {
-        setSearchParams({ title, author });
-        setPage(1);
-    };
-
-    const handlePageChange = (event, value) => {
-        setPage(value);
-    };
-
-    const handleDelete = async (id) => {
-        if (!window.confirm(t('novel.deleteConfirm'))) return;
-        deleteMutation.mutate(id);
-    };
-
-    const onSubmit = (data) => {
-        const novelData = { ...data };
-        if (isEdit) {
-            novelData.id = editingId;
-        }
-        saveMutation.mutate(novelData);
+        applySearch({ title, author });
     };
 
     const openModal = (novel = null) => {
-        if (novel) {
-            setIsEdit(true);
-            setEditingId(novel.id);
-            reset({
-                title: novel.title,
-                description: novel.description || '',
-                authorId: novel.authorId,
-                publishDate: novel.publishDate || ''
-            });
-        } else {
-            setIsEdit(false);
-            setEditingId(null);
-            reset({ title: '', description: '', authorId: '', publishDate: '' });
-        }
         setAuthorQuery('');
-        setShowModal(true);
+        openCrudModal(novel, (item) => {
+            if (item) {
+                reset({
+                    title: item.title,
+                    description: item.description || '',
+                    authorId: item.authorId,
+                    publishDate: item.publishDate || ''
+                });
+            } else {
+                reset({ title: '', description: '', authorId: '', publishDate: '' });
+            }
+        });
     };
-
-    const novels = novelsData?.content || [];
-    const totalPages = novelsData?.page.totalPages || 0;
 
     return (
         <Box>
@@ -160,33 +114,29 @@ const NovelList = () => {
                 showAddButton={user?.role === 'ADMIN'}
             />
 
-            <Card sx={{ mb: 4, p: 2 }}>
-                <Grid container spacing={2} alignItems="center">
-                    <Grid size={{ xs: 12, sm: 5 }}>
-                        <TextField
-                            fullWidth
-                            label={t('novel.search.title')}
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
-                            size="small"
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 5 }}>
-                        <TextField
-                            fullWidth
-                            label={t('novel.search.author')}
-                            value={author}
-                            onChange={e => setAuthor(e.target.value)}
-                            size="small"
-                        />
-                    </Grid>
-                    <Grid size={{ xs: 12, sm: 2 }}>
-                        <Button fullWidth variant="contained" startIcon={<SearchIcon />} onClick={handleSearch}>
-                            {t('common.btn.search')}
-                        </Button>
-                    </Grid>
+            <SearchBox
+                onSearch={handleSearch}
+                buttonLabel={t('common.btn.search')}
+            >
+                <Grid size={{ xs: 12, sm: 5 }}>
+                    <TextField
+                        fullWidth
+                        label={t('novel.search.title')}
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
+                        size="small"
+                    />
                 </Grid>
-            </Card>
+                <Grid size={{ xs: 12, sm: 5 }}>
+                    <TextField
+                        fullWidth
+                        label={t('novel.search.author')}
+                        value={author}
+                        onChange={e => setAuthor(e.target.value)}
+                        size="small"
+                    />
+                </Grid>
+            </SearchBox>
 
             <Grid container spacing={3}>
                 {novelsLoading ? (
@@ -235,9 +185,9 @@ const NovelList = () => {
             </Box>
 
             {/* Dialog */}
-            <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth maxWidth="sm">
+            <Dialog open={showModal} onClose={closeModal} fullWidth maxWidth="sm">
                 <DialogTitle>{isEdit ? t('novel.edit') : t('novel.add')}</DialogTitle>
-                <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <form onSubmit={handleSubmit(handleSave)} noValidate>
                     <DialogContent>
                         <FormTextField
                             name="title"
@@ -280,7 +230,7 @@ const NovelList = () => {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setShowModal(false)}>{t('common.btn.cancel')}</Button>
+                        <Button onClick={closeModal}>{t('common.btn.cancel')}</Button>
                         <LoadingButton
                             type="submit"
                             variant="contained"

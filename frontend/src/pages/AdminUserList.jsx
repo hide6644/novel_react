@@ -1,7 +1,4 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
-import api from '../api/axios';
 import {
     Box,
     Button,
@@ -29,14 +26,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import PageHeader from '../components/common/PageHeader';
 import FormTextField from '../components/common/FormTextField';
+import useCrud from '../hooks/useCrud';
 
 const AdminUserList = () => {
-    const queryClient = useQueryClient();
     const { user: currentUser, checkUser } = useAuth();
     const { t } = useTranslation();
-    const [showModal, setShowModal] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [editingId, setEditingId] = useState(null);
 
     const baseSchemaShape = {
         username: z.string().min(1, t('validate.required')).max(50, t('validate.maxLength', { max: 50 })),
@@ -56,46 +50,34 @@ const AdminUserList = () => {
         password: z.string().min(4, t('validate.minLength', { min: 4 })).max(100, t('validate.maxLength', { max: 100 })).optional().or(z.literal(''))
     });
 
-    const { control, handleSubmit, reset, setError, formState: { errors } } = useForm({
-        resolver: zodResolver(isEdit ? editSchema : createSchema),
-        defaultValues: { username: '', firstName: '', lastName: '', role: 'USER', expiryDate: '', password: '' }
-    });
-
-    const { data: users = [], isLoading: usersLoading } = useQuery({
+    const {
+        items: users,
+        isLoading: usersLoading,
+        handleDelete,
+        openModal: openCrudModal,
+        closeModal,
+        handleSave,
+        showModal,
+        isEdit,
+        editingId,
+        deleteMutation,
+        saveMutation
+    } = useCrud({
         queryKey: ['admin-users'],
-        queryFn: async () => {
-            const res = await api.get('/admin/users');
-            return res.data;
-        },
-    });
-
-    const deleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/admin/users/${id}`),
-        onSuccess: (_, id) => {
-            queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-            if (currentUser && currentUser.id === id) {
-                checkUser();
-            }
-        },
-    });
-
-    const saveMutation = useMutation({
-        mutationFn: (user) => {
-            if (isEdit) {
-                const payload = { ...user };
-                if (!payload.password) delete payload.password;
-                return api.put(`/admin/users/${user.id}`, payload);
-            }
-            return api.post('/admin/users', user);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-            setShowModal(false);
+        fetchPath: '/admin/users',
+        deletePath: '/admin/users',
+        savePath: '/admin/users',
+        onSaveSuccess: () => {
             if (isEdit && currentUser && currentUser.id === editingId) {
                 checkUser();
             }
         },
-        onError: (error) => {
+        onDeleteSuccess: (id) => {
+            if (currentUser && currentUser.id === id) {
+                checkUser();
+            }
+        },
+        onSaveError: (error) => {
             if (error.response && error.response.status === 409) {
                 setError('username', {
                     type: 'manual',
@@ -104,53 +86,49 @@ const AdminUserList = () => {
             } else {
                 alert(t('common.error.opFailed'));
             }
-        }
+        },
+        isPaginated: false,
     });
 
-    const handleDelete = (id) => {
-        if (!window.confirm(t('novel.deleteConfirm'))) return;
-        deleteMutation.mutate(id);
-    };
+    const { control, handleSubmit, reset, setError, formState: { errors } } = useForm({
+        resolver: zodResolver(isEdit ? editSchema : createSchema),
+        defaultValues: { username: '', firstName: '', lastName: '', role: 'USER', expiryDate: '', password: '' }
+    });
 
-    const handleSave = (data) => {
+    // Wrapper for handleSave to prepare data
+    const onFormSubmit = (data) => {
         const userData = { ...data };
         if (isEdit) {
             if (!userData.password) delete userData.password;
-            userData.id = editingId;
-            saveMutation.mutate(userData);
-        } else {
-            saveMutation.mutate(userData);
         }
+        handleSave(userData);
     };
 
     const openModal = (user = null) => {
-        if (user) {
-            setIsEdit(true);
-            setEditingId(user.id);
-            reset({
-                username: user.username,
-                firstName: user.firstName || '',
-                lastName: user.lastName || '',
-                role: user.role || 'USER',
-                expiryDate: user.expiryDate || '',
-                password: ''
-            });
-        } else {
-            setIsEdit(false);
-            setEditingId(null);
-            const today = new Date();
-            today.setFullYear(today.getFullYear() + 1);
-            const nextYearStr = today.toISOString().split('T')[0];
-            reset({
-                username: '',
-                firstName: '',
-                lastName: '',
-                role: 'USER',
-                expiryDate: nextYearStr,
-                password: ''
-            });
-        }
-        setShowModal(true);
+        openCrudModal(user, (item) => {
+            if (item) {
+                reset({
+                    username: item.username,
+                    firstName: item.firstName || '',
+                    lastName: item.lastName || '',
+                    role: item.role || 'USER',
+                    expiryDate: item.expiryDate || '',
+                    password: ''
+                });
+            } else {
+                const today = new Date();
+                today.setFullYear(today.getFullYear() + 1);
+                const nextYearStr = today.toISOString().split('T')[0];
+                reset({
+                    username: '',
+                    firstName: '',
+                    lastName: '',
+                    role: 'USER',
+                    expiryDate: nextYearStr,
+                    password: ''
+                });
+            }
+        });
     };
 
     return (
@@ -210,9 +188,9 @@ const AdminUserList = () => {
             </TableContainer>
 
             {/* Dialog */}
-            <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth maxWidth="xs">
+            <Dialog open={showModal} onClose={closeModal} fullWidth maxWidth="xs">
                 <DialogTitle>{isEdit ? t('user.edit') : t('user.add')}</DialogTitle>
-                <form onSubmit={handleSubmit(handleSave)} noValidate>
+                <form onSubmit={handleSubmit(onFormSubmit)} noValidate>
                     <DialogContent>
                         <FormTextField
                             name="username"
@@ -268,7 +246,7 @@ const AdminUserList = () => {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setShowModal(false)}>{t('common.btn.cancel')}</Button>
+                        <Button onClick={closeModal}>{t('common.btn.cancel')}</Button>
                         <LoadingButton
                             type="submit"
                             variant="contained"

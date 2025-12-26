@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import {
     Box,
@@ -17,7 +15,9 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Paper
+    Paper,
+    Grid,
+    TextField
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import EditIcon from '@mui/icons-material/Edit';
@@ -29,20 +29,12 @@ import { z } from 'zod';
 import PageHeader from '../components/common/PageHeader';
 import SearchBox from '../components/common/SearchBox';
 import FormTextField from '../components/common/FormTextField';
+import useCrud from '../hooks/useCrud';
 
 const AuthorList = () => {
     const { user } = useAuth();
-    const queryClient = useQueryClient();
     const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState('');
-
-    const [page, setPage] = useState(1);
-    const [pageSize] = useState(10);
-
-    // Modal
-    const [showModal, setShowModal] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [editingId, setEditingId] = useState(null);
 
     const schema = z.object({
         name: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
@@ -58,88 +50,46 @@ const AuthorList = () => {
         defaultValues: { name: '', nationality: '', birthDate: '' }
     });
 
-    const { data: authorsData, isLoading: authorsLoading } = useQuery({
-        queryKey: ['authors', page, pageSize, searchQuery],
-        queryFn: async () => {
-            const params = {
-                page: page - 1,
-                size: pageSize,
-                name: searchQuery
-            };
-            const res = await api.get('/authors', { params });
-            return res.data;
-        },
-    });
-
-    const deleteMutation = useMutation({
-        mutationFn: (id) => api.delete(`/authors/${id}`),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['authors'] });
-        },
-        onError: () => {
-            alert(t('common.error.deleteFailed'));
-        }
-    });
-
-    const saveMutation = useMutation({
-        mutationFn: (author) => {
-            if (isEdit) {
-                return api.put(`/authors/${author.id}`, author);
-            }
-            return api.post('/authors', author);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['authors'] });
-            setShowModal(false);
-        },
-        onError: () => {
-            alert(t('common.error.opFailed'));
-        }
+    const {
+        page,
+        items: authors,
+        totalPages,
+        isLoading: authorsLoading,
+        handlePageChange,
+        handleDelete,
+        openModal: openCrudModal,
+        closeModal,
+        handleSave,
+        showModal,
+        isEdit,
+        deleteMutation,
+        saveMutation,
+        handleSearch: applySearch
+    } = useCrud({
+        queryKey: ['authors'],
+        fetchPath: '/authors',
+        deletePath: '/authors',
+        savePath: '/authors',
+        defaultSearchParams: { name: '' }
     });
 
     const handleSearch = () => {
-        setAppliedSearch(searchQuery);
-        setPage(1);
-    };
-
-    const handlePageChange = (event, value) => {
-        setPage(value);
-    };
-
-    const handleDelete = (id) => {
-        if (!window.confirm(t('common.confirm.delete'))) return;
-        deleteMutation.mutate(id);
-    };
-
-    const handleSave = (data) => {
-        const authorData = { ...data };
-        if (isEdit) {
-            authorData.id = editingId;
-            saveMutation.mutate(authorData);
-        } else {
-            saveMutation.mutate(authorData);
-        }
+        applySearch({ name: searchQuery });
     };
 
     const openModal = (author = null) => {
-        if (author) {
-            setIsEdit(true);
-            setEditingId(author.id);
-            reset({
-                name: author.name,
-                nationality: author.nationality || '',
-                birthDate: author.birthDate || ''
-            });
-        } else {
-            setIsEdit(false);
-            setEditingId(null);
-            reset({ name: '', nationality: '', birthDate: '' });
-        }
-        setShowModal(true);
+        openCrudModal(author, (item) => {
+            if (item) {
+                reset({
+                    name: item.name,
+                    nationality: item.nationality || '',
+                    birthDate: item.birthDate || ''
+                });
+            } else {
+                reset({ name: '', nationality: '', birthDate: '' });
+            }
+        });
     };
-
-    const authors = authorsData?.content || [];
-    const totalPages = authorsData?.page.totalPages || 0;
 
     return (
         <Box>
@@ -151,12 +101,19 @@ const AuthorList = () => {
             />
 
             <SearchBox
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
                 onSearch={handleSearch}
-                label={t('novel.search.author')}
                 buttonLabel={t('common.btn.search')}
-            />
+            >
+                <Grid size={{ xs: 12, sm: 10 }}>
+                    <TextField
+                        fullWidth
+                        label={t('novel.search.author')}
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        size="small"
+                    />
+                </Grid>
+            </SearchBox>
 
             <TableContainer component={Paper}>
                 <Table>
@@ -209,7 +166,7 @@ const AuthorList = () => {
                 />
             </Box>
 
-            <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth maxWidth="sm">
+            <Dialog open={showModal} onClose={closeModal} fullWidth maxWidth="sm">
                 <DialogTitle>{isEdit ? t('author.edit') : t('author.add')}</DialogTitle>
                 <form onSubmit={handleSubmit(handleSave)} noValidate>
                     <DialogContent>
@@ -245,7 +202,7 @@ const AuthorList = () => {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setShowModal(false)}>{t('common.btn.cancel')}</Button>
+                        <Button onClick={closeModal}>{t('common.btn.cancel')}</Button>
                         <LoadingButton
                             type="submit"
                             variant="contained"
