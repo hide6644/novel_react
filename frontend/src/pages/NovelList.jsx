@@ -21,7 +21,6 @@ import {
     DialogActions,
     Pagination
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchBox from '../components/common/SearchBox';
@@ -231,13 +230,13 @@ const NovelList = () => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={closeModal}>{t('common.btn.cancel')}</Button>
-                        <LoadingButton
+                        <Button
                             type="submit"
                             variant="contained"
                             loading={saveMutation.isPending}
                         >
                             {t('common.btn.save')}
-                        </LoadingButton>
+                        </Button>
                     </DialogActions>
                 </form>
             </Dialog>

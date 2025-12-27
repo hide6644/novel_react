@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Box, Card, CardContent, Button, Typography, Alert } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -67,7 +66,7 @@ const Login = () => {
                             label={t('user.label.password')}
                             type="password"
                         />
-                        <LoadingButton
+                        <Button
                             type="submit"
                             fullWidth
                             variant="contained"
@@ -76,7 +75,7 @@ const Login = () => {
                             loading={isSubmitting}
                         >
                             {t('auth.btn.login')}
-                        </LoadingButton>
+                        </Button>
                     </Box>
                 </CardContent>
             </Card>
