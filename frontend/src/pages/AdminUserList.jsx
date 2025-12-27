@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CheckIcon from '@mui/icons-material/Check';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -180,11 +181,7 @@ const AdminUserList = () => {
                                 </TableCell>
                                 <TableCell>{row.expiryDate}</TableCell>
                                 <TableCell>
-                                    <Chip
-                                        label={row.enabled ? "Enable" : "Disable"}
-                                        color={row.enabled ? "success" : "default"}
-                                        size="small"
-                                    />
+                                    {row.enabled && <CheckIcon color="success" />}
                                 </TableCell>
                                 <TableCell>
                                     <IconButton color="primary" onClick={() => openModal(row)}>
@@ -263,7 +260,7 @@ const AdminUserList = () => {
                             render={({ field }) => (
                                 <FormControlLabel
                                     control={<Switch {...field} checked={field.value} />}
-                                    label={field.value ? "Enable" : "Disable"}
+                                    label={field.value ? t('common.enable') : t('common.disable')}
                                 />
                             )}
                         />

@@ -22,7 +22,9 @@
         "confirm": {
             "delete": "本当に削除しますか？"
         },
-        "loading": "読み込み中..."
+        "loading": "読み込み中...",
+        "enable": "有効",
+        "disable": "無効"
     },
     "validate": {
         "required": "必須項目です",
