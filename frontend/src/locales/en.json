@@ -62,7 +62,8 @@
             "emptyToKeep": " (change without input)",
             "currentPassword": "Current Password",
             "newPassword": "New Password",
-            "confirmPassword": "Confirm New Password"
+            "confirmPassword": "Confirm New Password",
+            "enabled": "Enabled"
         },
         "error": {
             "usernameExists": "Username already exists"

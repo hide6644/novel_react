@@ -43,19 +43,20 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByUsername(dto.username()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
+
         User user = new User();
         user.setUsername(dto.username());
         user.setPassword(passwordEncoder.encode(dto.password()));
         user.setRole(dto.role());
-        // Use injected value if dto doesn't strictly overriding (assuming logic:
-        // typically creation follows policy)
-        // However, if dto.expiryDate is provided (e.g. from Admin UI manual override),
-        // we might respect it.
-        // Let's fallback to policy if null.
+
         if (dto.expiryDate() != null) {
             user.setExpiryDate(dto.expiryDate());
         } else {
             user.setExpiryDate(LocalDate.now().plusDays(passwordExpirationDays));
+        }
+
+        if (dto.enabled() != null) {
+            user.setEnabled(dto.enabled());
         }
 
         user.setFirstName(dto.firstName());
@@ -67,17 +68,22 @@ public class UserServiceImpl implements UserService {
     public UserResponse update(Long id, UserUpdateRequest dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        // For update, typically we might not change username or password here, but
-        // simplified:
-        // If password is provided and not empty, update it.
+
         if (dto.password() != null && !dto.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
             user.setExpiryDate(LocalDate.now().plusDays(passwordExpirationDays));
         }
+
         user.setRole(dto.role());
+
         if (dto.expiryDate() != null) {
             user.setExpiryDate(dto.expiryDate());
         }
+
+        if (dto.enabled() != null) {
+            user.setEnabled(dto.enabled());
+        }
+
         user.setFirstName(dto.firstName());
         user.setLastName(dto.lastName());
         return toDto(userRepository.save(user));
@@ -119,8 +125,10 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserResponse toDto(User user) {
-        return new UserResponse(user.getId(), user.getUsername(), user.getRole(), user.getExpiryDate(),
+        return new UserResponse(user.getId(), user.getUsername(), user.getRole(),
                 user.getFirstName(),
-                user.getLastName());
+                user.getLastName(),
+                user.getExpiryDate(),
+                user.isEnabled());
     }
 }

@@ -34,9 +34,10 @@ public class DataInitializer {
                 admin.setUsername("admin");
                 admin.setPassword(passwordEncoder.encode("admin"));
                 admin.setRole(Role.ADMIN);
-                admin.setExpiryDate(LocalDate.now().plusYears(100)); // Never expire basically
                 admin.setFirstName("Admin");
                 admin.setLastName("User");
+                admin.setExpiryDate(LocalDate.now().plusYears(100)); // Never expire basically
+                admin.setEnabled(true);
                 userRepository.save(admin);
 
                 // Normal User
@@ -44,9 +45,10 @@ public class DataInitializer {
                 user.setUsername("user");
                 user.setPassword(passwordEncoder.encode("user"));
                 user.setRole(Role.USER);
-                user.setExpiryDate(LocalDate.now().plusDays(30));
                 user.setFirstName("Normal");
                 user.setLastName("User");
+                user.setExpiryDate(LocalDate.now().plusDays(30));
+                user.setEnabled(true);
                 userRepository.save(user);
 
                 // Expired User
@@ -55,6 +57,7 @@ public class DataInitializer {
                 expired.setPassword(passwordEncoder.encode("password"));
                 expired.setRole(Role.USER);
                 expired.setExpiryDate(LocalDate.now().minusDays(1)); // Expired yesterday
+                expired.setEnabled(true);
                 userRepository.save(expired);
             }
 

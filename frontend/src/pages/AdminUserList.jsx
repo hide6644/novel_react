@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext';
+import { Controller } from 'react-hook-form';
 import {
     Box,
     Button,
@@ -15,7 +16,9 @@ import {
     DialogContent,
     DialogActions,
     Chip,
-    MenuItem
+    MenuItem,
+    FormControlLabel,
+    Switch
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import EditIcon from '@mui/icons-material/Edit';
@@ -37,7 +40,8 @@ const AdminUserList = () => {
         firstName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
         lastName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
         role: z.string().min(1, t('validate.required')),
-        expiryDate: z.string().optional().nullable()
+        expiryDate: z.string().optional().nullable(),
+        enabled: z.boolean().optional()
     };
 
     const createSchema = z.object({
@@ -92,7 +96,7 @@ const AdminUserList = () => {
 
     const { control, handleSubmit, reset, setError, formState: { errors } } = useForm({
         resolver: zodResolver(isEdit ? editSchema : createSchema),
-        defaultValues: { username: '', firstName: '', lastName: '', role: 'USER', expiryDate: '', password: '' }
+        defaultValues: { username: '', password: '', firstName: '', lastName: '', role: 'USER', expiryDate: '', enabled: true }
     });
 
     // Wrapper for handleSave to prepare data
@@ -109,11 +113,12 @@ const AdminUserList = () => {
             if (item) {
                 reset({
                     username: item.username,
+                    password: '',
                     firstName: item.firstName || '',
                     lastName: item.lastName || '',
                     role: item.role || 'USER',
                     expiryDate: item.expiryDate || '',
-                    password: ''
+                    enabled: item.enabled
                 });
             } else {
                 const today = new Date();
@@ -121,11 +126,12 @@ const AdminUserList = () => {
                 const nextYearStr = today.toISOString().split('T')[0];
                 reset({
                     username: '',
+                    password: '',
                     firstName: '',
                     lastName: '',
                     role: 'USER',
                     expiryDate: nextYearStr,
-                    password: ''
+                    enabled: true
                 });
             }
         });
@@ -149,13 +155,14 @@ const AdminUserList = () => {
                             <TableCell>{t('user.label.lastName')}</TableCell>
                             <TableCell>{t('user.label.role')}</TableCell>
                             <TableCell>{t('user.label.expiryDate')}</TableCell>
+                            <TableCell>{t('user.label.enabled')}</TableCell>
                             <TableCell>{t('common.table.actions')}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {usersLoading ? (
                             <TableRow>
-                                <TableCell colSpan={7} align="center">
+                                <TableCell colSpan={8} align="center">
                                     {t('common.loading')}
                                 </TableCell>
                             </TableRow>
@@ -173,6 +180,13 @@ const AdminUserList = () => {
                                     />
                                 </TableCell>
                                 <TableCell>{row.expiryDate}</TableCell>
+                                <TableCell>
+                                    <Chip
+                                        label={row.enabled ? "Enable" : "Disable"}
+                                        color={row.enabled ? "success" : "default"}
+                                        size="small"
+                                    />
+                                </TableCell>
                                 <TableCell>
                                     <IconButton color="primary" onClick={() => openModal(row)}>
                                         <EditIcon />
@@ -202,6 +216,15 @@ const AdminUserList = () => {
                             disabled={isEdit}
                         />
                         <FormTextField
+                            name="password"
+                            control={control}
+                            margin="dense"
+                            label={isEdit ? t('user.label.password') + t('user.label.emptyToKeep') : t('user.label.password')}
+                            type="password"
+                            fullWidth
+                            required={!isEdit}
+                        />
+                        <FormTextField
                             name="lastName"
                             control={control}
                             margin="dense"
@@ -214,15 +237,6 @@ const AdminUserList = () => {
                             margin="dense"
                             label={t('user.label.firstName')}
                             fullWidth
-                        />
-                        <FormTextField
-                            name="password"
-                            control={control}
-                            margin="dense"
-                            label={isEdit ? t('user.label.password') + t('user.label.emptyToKeep') : t('user.label.password')}
-                            type="password"
-                            fullWidth
-                            required={!isEdit}
                         />
                         <FormTextField
                             select
@@ -243,6 +257,16 @@ const AdminUserList = () => {
                             type="date"
                             fullWidth
                             slotProps={{ inputLabel: { shrink: true } }}
+                        />
+                        <Controller
+                            name="enabled"
+                            control={control}
+                            render={({ field }) => (
+                                <FormControlLabel
+                                    control={<Switch {...field} checked={field.value} />}
+                                    label={field.value ? "Enable" : "Disable"}
+                                />
+                            )}
                         />
                     </DialogContent>
                     <DialogActions>

@@ -62,7 +62,8 @@
             "emptyToKeep": " (変更無しの場合は未入力)",
             "currentPassword": "現在のパスワード",
             "newPassword": "新しいパスワード",
-            "confirmPassword": "新しいパスワード（確認）"
+            "confirmPassword": "新しいパスワード（確認）",
+            "enabled": "有効"
         },
         "error": {
             "usernameExists": "ユーザー名は既に使用されています"
