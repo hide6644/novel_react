@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import api from '../api/axios';
-import { Box, Card, CardContent, Typography, Button, Alert, Grid } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Grid,
+    Typography
+} from '@mui/material';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
+
+import api from '../api/axios';
 import FormTextField from '../components/common/FormTextField';
+import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {
     const { user, checkUser } = useAuth();

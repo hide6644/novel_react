@@ -1,33 +1,35 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import {
     Box,
     Button,
-    IconButton,
     Dialog,
-    DialogTitle,
-    DialogContent,
     DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    IconButton,
     Pagination,
+    Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    Paper,
-    Grid,
     TextField
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
+
+import FormTextField from '../components/common/FormTextField';
 import PageHeader from '../components/common/PageHeader';
 import SearchBox from '../components/common/SearchBox';
-import FormTextField from '../components/common/FormTextField';
+import { useAuth } from '../context/AuthContext';
 import useCrud from '../hooks/useCrud';
 
 const AuthorList = () => {

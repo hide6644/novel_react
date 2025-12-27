@@ -1,18 +1,19 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+
+import { Box, CssBaseline } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import theme from './theme';
-import { AuthProvider, useAuth } from './context/AuthContext';
+
 import Navbar from './components/Navbar';
-import Login from './pages/Login';
-import ChangePassword from './pages/ChangePassword';
-import Profile from './pages/Profile';
-import NovelList from './pages/NovelList';
-import AuthorList from './pages/AuthorList';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import AdminUserList from './pages/AdminUserList';
-import { Box } from '@mui/material';
+import AuthorList from './pages/AuthorList';
+import ChangePassword from './pages/ChangePassword';
+import Login from './pages/Login';
+import NovelList from './pages/NovelList';
+import Profile from './pages/Profile';
+import theme from './theme';
 
 const ProtectedRoute = ({ roles = [] }) => {
     const { user, loading } = useAuth();

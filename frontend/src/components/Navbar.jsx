@@ -1,27 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import LogoutIcon from '@mui/icons-material/Logout';
+
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-
-import { useTranslation } from 'react-i18next';
 import LanguageIcon from '@mui/icons-material/Language';
+import LogoutIcon from '@mui/icons-material/Logout';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
+
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const handleLogout = async () => {
         await logout();

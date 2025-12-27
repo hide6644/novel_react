@@ -1,5 +1,5 @@
-import { Card, Grid, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { Button, Card, Grid } from '@mui/material';
 
 const SearchBox = ({ onSearch, buttonLabel, children }) => {
     return (
