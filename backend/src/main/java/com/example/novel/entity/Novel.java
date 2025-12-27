@@ -29,8 +29,4 @@ public class Novel {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "added_by_user_id") // Optional: track who added it
-    private User addedBy;
 }

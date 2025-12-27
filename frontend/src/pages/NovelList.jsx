@@ -42,7 +42,7 @@ const NovelList = () => {
 
     const schema = z.object({
         title: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
-        description: z.string().max(500, t('validate.maxLength', { max: 500 })).optional(),
+        description: z.string().max(1000, t('validate.maxLength', { max: 1000 })).optional(),
         authorId: z.union([z.number(), z.string()]).refine(val => val !== '', t('validate.select')),
         publishDate: z.string().optional().nullable()
     });

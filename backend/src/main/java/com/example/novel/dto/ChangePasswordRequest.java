@@ -1,8 +1,9 @@
 package com.example.novel.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record ChangePasswordRequest(
-        @NotBlank String currentPassword,
-        @NotBlank String newPassword) {
+        @NotBlank @Size(max = 100) String currentPassword,
+        @NotBlank @Size(max = 100) String newPassword) {
 }

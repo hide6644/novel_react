@@ -36,9 +36,9 @@ const AdminUserList = () => {
     const { t } = useTranslation();
 
     const baseSchemaShape = {
-        username: z.string().min(1, t('validate.required')).max(50, t('validate.maxLength', { max: 50 })),
-        firstName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
-        lastName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
+        username: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
+        firstName: z.string().max(100, t('validate.maxLength', { max: 100 })).optional(),
+        lastName: z.string().max(100, t('validate.maxLength', { max: 100 })).optional(),
         role: z.string().min(1, t('validate.required')),
         expiryDate: z.string().optional().nullable(),
         enabled: z.boolean().optional()

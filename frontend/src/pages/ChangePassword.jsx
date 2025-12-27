@@ -25,10 +25,10 @@ const ChangePassword = () => {
     const [success, setSuccess] = useState('');
 
     const schema = z.object({
-        username: z.string().min(1, t('validate.required')),
-        currentPassword: z.string().min(1, t('validate.required')),
+        username: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
+        currentPassword: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
         newPassword: z.string().min(4, t('validate.minLength', { min: 4 })).max(100, t('validate.maxLength', { max: 100 })),
-        confirmPassword: z.string().min(1, t('validate.required'))
+        confirmPassword: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 }))
     }).refine((data) => data.newPassword === data.confirmPassword, {
         message: t('profile.error.passwordMismatch'),
         path: ["confirmPassword"],

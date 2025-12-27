@@ -4,12 +4,13 @@ import com.example.novel.entity.Role;
 import java.time.LocalDate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record UserUpdateRequest(
-        @NotBlank String username,
-        String password,
-        String firstName,
-        String lastName,
+        @NotBlank @Size(max = 100) String username,
+        @Size(max = 100) String password,
+        @Size(max = 100) String firstName,
+        @Size(max = 100) String lastName,
         @NotNull Role role,
         LocalDate expiryDate,
         Boolean enabled) {

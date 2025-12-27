@@ -28,8 +28,8 @@ const Profile = () => {
 
     // Profile Form
     const profileSchema = z.object({
-        firstName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional(),
-        lastName: z.string().max(50, t('validate.maxLength', { max: 50 })).optional()
+        firstName: z.string().max(100, t('validate.maxLength', { max: 100 })).optional(),
+        lastName: z.string().max(100, t('validate.maxLength', { max: 100 })).optional()
     });
 
     const { control: profileControl, handleSubmit: handleProfileSubmit, reset: resetProfile, formState: { isSubmitting: isProfileSubmitting } } = useForm({
@@ -39,7 +39,7 @@ const Profile = () => {
 
     // Password Form
     const passwordSchema = z.object({
-        currentPassword: z.string().min(1, t('validate.required')),
+        currentPassword: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
         newPassword: z.string().min(4, t('validate.minLength', { min: 4 })).max(100, t('validate.maxLength', { max: 100 }))
     });
 

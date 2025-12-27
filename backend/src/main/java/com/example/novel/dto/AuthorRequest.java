@@ -1,10 +1,11 @@
 package com.example.novel.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record AuthorRequest(
-        @NotBlank String name,
+        @NotBlank @Size(max = 100) String name,
         LocalDate birthDate,
-        String nationality) {
+        @Size(max = 100) String nationality) {
 }

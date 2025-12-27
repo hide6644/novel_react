@@ -1,6 +1,8 @@
 package com.example.novel.dto;
 
+import jakarta.validation.constraints.Size;
+
 public record UserProfileUpdateRequest(
-        String firstName,
-        String lastName) {
+        @Size(max = 100) String firstName,
+        @Size(max = 100) String lastName) {
 }

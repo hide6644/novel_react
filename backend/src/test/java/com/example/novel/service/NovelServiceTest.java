@@ -43,7 +43,7 @@ class NovelServiceTest {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
         Author author = new Author(1L, "Author", LocalDate.now(), "Country");
-        Novel novel = new Novel(1L, "Title", "Description", LocalDate.now(), author, null);
+        Novel novel = new Novel(1L, "Title", "Description", LocalDate.now(), author);
         Page<Novel> novelPage = new PageImpl<>(Arrays.asList(novel));
 
         when(novelRepository.findAll(pageable)).thenReturn(novelPage);
@@ -64,7 +64,7 @@ class NovelServiceTest {
         String authorName = "Author";
         Pageable pageable = PageRequest.of(0, 10);
         Author author = new Author(1L, "Author", LocalDate.now(), "Country");
-        Novel novel = new Novel(1L, "Title", "Description", LocalDate.now(), author, null);
+        Novel novel = new Novel(1L, "Title", "Description", LocalDate.now(), author);
         Page<Novel> novelPage = new PageImpl<>(Arrays.asList(novel));
 
         when(novelRepository.searchByTitleAndAuthorName(title, authorName, pageable)).thenReturn(novelPage);
@@ -84,7 +84,7 @@ class NovelServiceTest {
         Long authorId = 1L;
         NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now());
         Author author = new Author(authorId, "Author", LocalDate.now(), "Country");
-        Novel savedNovel = new Novel(1L, "Title", "Description", LocalDate.now(), author, null);
+        Novel savedNovel = new Novel(1L, "Title", "Description", LocalDate.now(), author);
 
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
         when(novelRepository.save(any(Novel.class))).thenReturn(savedNovel);
@@ -127,8 +127,8 @@ class NovelServiceTest {
         NovelRequest request = new NovelRequest("Updated Title", "Updated Description", authorId, LocalDate.now());
 
         Author author = new Author(authorId, "Author", LocalDate.now(), "Country");
-        Novel existingNovel = new Novel(novelId, "Old Title", "Old Description", LocalDate.now(), author, null);
-        Novel updatedNovel = new Novel(novelId, "Updated Title", "Updated Description", LocalDate.now(), author, null);
+        Novel existingNovel = new Novel(novelId, "Old Title", "Old Description", LocalDate.now(), author);
+        Novel updatedNovel = new Novel(novelId, "Updated Title", "Updated Description", LocalDate.now(), author);
 
         when(novelRepository.findById(novelId)).thenReturn(Optional.of(existingNovel));
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
@@ -171,7 +171,7 @@ class NovelServiceTest {
         Long authorId = 99L;
         NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now());
         Author existingAuthor = new Author(1L, "Author", LocalDate.now(), "Country");
-        Novel existingNovel = new Novel(novelId, "Title", "Description", LocalDate.now(), existingAuthor, null);
+        Novel existingNovel = new Novel(novelId, "Title", "Description", LocalDate.now(), existingAuthor);
 
         when(novelRepository.findById(novelId)).thenReturn(Optional.of(existingNovel));
         when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
@@ -205,7 +205,7 @@ class NovelServiceTest {
         // Arrange
         Long novelId = 1L;
         Author author = new Author(1L, "Author", LocalDate.now(), "Country");
-        Novel novel = new Novel(novelId, "Title", "Description", LocalDate.now(), author, null);
+        Novel novel = new Novel(novelId, "Title", "Description", LocalDate.now(), author);
 
         when(novelRepository.findById(novelId)).thenReturn(Optional.of(novel));
 

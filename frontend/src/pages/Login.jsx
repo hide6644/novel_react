@@ -24,8 +24,8 @@ const Login = () => {
     const { t } = useTranslation();
 
     const schema = z.object({
-        username: z.string().min(1, t('validate.required')),
-        password: z.string().min(1, t('validate.required'))
+        username: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
+        password: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 }))
     });
 
     const { control, handleSubmit, formState: { isSubmitting } } = useForm({
