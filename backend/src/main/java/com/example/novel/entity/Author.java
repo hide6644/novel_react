@@ -6,12 +6,15 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 
+import lombok.EqualsAndHashCode;
+
 @Entity
 @Table(name = "authors")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Author {
+@EqualsAndHashCode(callSuper = true)
+public class Author extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

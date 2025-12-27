@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -20,20 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        boolean credentialsNonExpired = true;
-        if (user.getExpiryDate() != null && user.getExpiryDate().isBefore(LocalDate.now())) {
-            // Or maybe account is expired vs credentials. Usually simple logic:
-            credentialsNonExpired = false;
-        }
-
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword()) // Hashed
-                .roles(user.getRole().name())
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(!credentialsNonExpired)
-                .disabled(!user.isEnabled())
-                .build();
+        return new UserDetailsImpl(user);
     }
 }
