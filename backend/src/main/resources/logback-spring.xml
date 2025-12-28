@@ -95,25 +95,38 @@
         </rollingPolicy>
     </appender>
     
-    <!-- LOGGERS -->
-    <root level="info">
-        <appender-ref ref="Console" />
-        <appender-ref ref="AppFile" />
-        <appender-ref ref="ErrorFile" />
-    </root>
+    <springProfile name="!prod">
+        <!-- LOGGERS -->
+        <root level="info">
+            <appender-ref ref="Console" />
+            <appender-ref ref="AppFile" />
+            <appender-ref ref="ErrorFile" />
+        </root>
 
-    <!-- Application Debug Logs: Bubbles to root, but root appenders filter INFO+, so DebugFile gets DEBUG -->
-    <logger name="com.example.novel" level="debug" additivity="true">
-        <appender-ref ref="DebugFile" />
-    </logger>
-    
-    <!-- SQL Logging: Separate, does not bubble to avoid polluting Console/Main Log unless desired -->
-    <logger name="org.hibernate.SQL" level="debug" additivity="false">
-         <appender-ref ref="SqlFile" />
-    </logger>
+        <!-- Application Debug Logs: Bubbles to root, but root appenders filter INFO+, so DebugFile gets DEBUG -->
+        <logger name="com.example.novel" level="debug" additivity="true">
+            <appender-ref ref="DebugFile" />
+        </logger>
+        
+        <!-- SQL Logging: Separate, does not bubble to avoid polluting Console/Main Log unless desired -->
+        <logger name="org.hibernate.SQL" level="debug" additivity="false">
+            <appender-ref ref="SqlFile" />
+        </logger>
 
-    <logger name="org.hibernate.orm.jdbc.bind" level="trace" additivity="false">
-         <appender-ref ref="SqlFile" />
-    </logger>
+        <logger name="org.hibernate.orm.jdbc.bind" level="trace" additivity="false">
+            <appender-ref ref="SqlFile" />
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="AppFile" />
+            <appender-ref ref="ErrorFile" />
+        </root>
+        
+        <logger name="com.example.novel" level="info" additivity="true" />
+        <logger name="org.hibernate.SQL" level="warn" additivity="false" />
+        <logger name="org.hibernate.orm.jdbc.bind" level="warn" additivity="false" />
+    </springProfile>
 
 </configuration>

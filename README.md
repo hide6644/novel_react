@@ -69,7 +69,7 @@ This project is a comprehensive system designed to handle novel data, authors, a
 
 ## Logging
 The application is configured to output logs to the `logs/` directory:
-- `novel-app.log`: General application logs.
+- `app.log`: General application logs.
 - `error.log`: Error-level logs.
 - `debug.log`: Debug-level logs for the application package.
 - `sql.log`: SQL statements and Hibernate logs.
