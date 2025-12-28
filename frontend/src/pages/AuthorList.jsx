@@ -156,7 +156,7 @@ const AuthorList = () => {
                 </Table>
             </TableContainer>
 
-            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ py: 2, display: 'flex', justifyContent: 'center', position: 'sticky', bottom: 0, bgcolor: 'background.default', zIndex: 10 }}>
                 <Pagination
                     count={totalPages}
                     page={page}

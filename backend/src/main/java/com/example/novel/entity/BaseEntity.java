@@ -34,6 +34,6 @@ public abstract class BaseEntity {
     private Long updatedBy;
 
     @Version
-    @Column(name = "version")
+    @Column(nullable = false)
     private Integer version;
 }
