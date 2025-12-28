@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import api from '../api/axios';
-import FormTextField from '../components/common/FormTextField';
+import { FormTextField } from '../components';
 import { useAuth } from '../context/AuthContext';
 
 const Profile = () => {

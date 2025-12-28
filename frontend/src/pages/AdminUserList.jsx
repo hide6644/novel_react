@@ -26,8 +26,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import FormTextField from '../components/common/FormTextField';
-import PageHeader from '../components/common/PageHeader';
+import { FormTextField, PageHeader } from '../components';
 import { useAuth } from '../context/AuthContext';
 import useCrud from '../hooks/useCrud';
 

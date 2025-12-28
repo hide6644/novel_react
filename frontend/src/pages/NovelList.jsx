@@ -29,10 +29,12 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
 import api from '../api/axios';
-import FormAutocomplete from '../components/common/FormAutocomplete';
-import FormTextField from '../components/common/FormTextField';
-import PageHeader from '../components/common/PageHeader';
-import SearchBox from '../components/common/SearchBox';
+import {
+    FormAutocomplete,
+    FormTextField,
+    PageHeader,
+    SearchBox
+} from '../components';
 import { useAuth } from '../context/AuthContext';
 import useCrud from '../hooks/useCrud';
 

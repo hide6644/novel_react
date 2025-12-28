@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-import FormTextField from '../components/common/FormTextField';
+import { FormTextField } from '../components';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {

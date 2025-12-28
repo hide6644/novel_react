@@ -5,14 +5,16 @@ import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import Navbar from './components/Navbar';
+import { Navbar } from './components';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import AdminUserList from './pages/AdminUserList';
-import AuthorList from './pages/AuthorList';
-import ChangePassword from './pages/ChangePassword';
-import Login from './pages/Login';
-import NovelList from './pages/NovelList';
-import Profile from './pages/Profile';
+import {
+    AdminUserList,
+    AuthorList,
+    ChangePassword,
+    Login,
+    NovelList,
+    Profile
+} from './pages';
 import theme from './theme';
 
 const ProtectedRoute = ({ roles = [] }) => {
