@@ -17,7 +17,11 @@ import {
     IconButton,
     Pagination,
     TextField,
-    Typography
+    Typography,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -68,7 +72,9 @@ const NovelList = () => {
         isEdit,
         deleteMutation,
         saveMutation,
-        handleSearch: applySearch
+        handleSearch: applySearch,
+        handleSort,
+        sort
     } = useCrud({
         queryKey: ['novels'],
         fetchPath: '/novels',
@@ -147,6 +153,27 @@ const NovelList = () => {
                     />
                 </Grid>
             </SearchBox>
+
+            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                <FormControl size="small" sx={{ minWidth: 200 }}>
+                    <InputLabel id="sort-select-label">{t('common.sort.label')}</InputLabel>
+                    <Select
+                        labelId="sort-select-label"
+                        id="sort-select"
+                        value={sort}
+                        label={t('common.sort.label')}
+                        onChange={(e) => handleSort(e.target.value)}
+                    >
+                        <MenuItem value=""><em>{t('common.sort.none')}</em></MenuItem>
+                        <MenuItem value="title,asc">{t('novel.sort.titleAsc')}</MenuItem>
+                        <MenuItem value="title,desc">{t('novel.sort.titleDesc')}</MenuItem>
+                        <MenuItem value="author.name,asc">{t('novel.sort.authorAsc')}</MenuItem>
+                        <MenuItem value="author.name,desc">{t('novel.sort.authorDesc')}</MenuItem>
+                        <MenuItem value="publishDate,asc">{t('novel.sort.dateAsc')}</MenuItem>
+                        <MenuItem value="publishDate,desc">{t('novel.sort.dateDesc')}</MenuItem>
+                    </Select>
+                </FormControl>
+            </Box>
 
             <Grid container spacing={3}>
                 {novelsLoading ? (

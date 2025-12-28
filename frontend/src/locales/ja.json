@@ -25,7 +25,11 @@
         },
         "loading": "読み込み中...",
         "enable": "有効",
-        "disable": "無効"
+        "disable": "無効",
+        "sort": {
+            "label": "ソート",
+            "none": "なし"
+        }
     },
     "validate": {
         "required": "必須項目です",
@@ -113,6 +117,14 @@
             "publishDate": "出版日",
             "author": "著者",
             "selectAuthor": "著者を選択"
+        },
+        "sort": {
+            "titleAsc": "タイトル (昇順)",
+            "titleDesc": "タイトル (降順)",
+            "authorAsc": "著者名 (昇順)",
+            "authorDesc": "著者名 (降順)",
+            "dateAsc": "出版日 (古い順)",
+            "dateDesc": "出版日 (新しい順)"
         }
     },
     "author": {

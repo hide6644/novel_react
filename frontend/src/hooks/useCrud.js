@@ -25,13 +25,16 @@ const useCrud = ({
     // Search
     const [searchParams, setSearchParams] = useState(defaultSearchParams);
 
+    // Sort
+    const [sort, setSort] = useState(defaultSearchParams.sort || '');
+
     // Modal
     const [showModal, setShowModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [editingId, setEditingId] = useState(null);
 
     // Fetch Data
-    const queryKeyDeps = [...queryKey, searchParams];
+    const queryKeyDeps = [...queryKey, searchParams, sort];
     if (isPaginated) {
         queryKeyDeps.push(page, pageSize);
     }
@@ -42,6 +45,9 @@ const useCrud = ({
             const params = {
                 ...searchParamMapper(searchParams)
             };
+            if (sort) {
+                params.sort = sort;
+            }
             if (isPaginated) {
                 params.page = page - 1;
                 params.size = pageSize;
@@ -94,6 +100,11 @@ const useCrud = ({
         setPage(1);
     };
 
+    const handleSort = (newSort) => {
+        setSort(newSort);
+        setPage(1);
+    }
+
     const handlePageChange = (event, value) => {
         setPage(value);
     };
@@ -133,6 +144,7 @@ const useCrud = ({
         page,
         pageSize,
         searchParams,
+        sort,
         showModal,
         isEdit,
         editingId,
@@ -142,6 +154,7 @@ const useCrud = ({
 
         // Actions
         handleSearch,
+        handleSort,
         handlePageChange,
         handleDelete,
         openModal,

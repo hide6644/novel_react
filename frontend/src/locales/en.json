@@ -25,7 +25,11 @@
         },
         "loading": "Loading...",
         "enable": "Enable",
-        "disable": "Disable"
+        "disable": "Disable",
+        "sort": {
+            "label": "Sort",
+            "none": "None"
+        }
     },
     "validate": {
         "required": "Required field",
@@ -113,6 +117,14 @@
             "publishDate": "Publish Date",
             "author": "Author",
             "selectAuthor": "Select Author"
+        },
+        "sort": {
+            "titleAsc": "Title (ASC)",
+            "titleDesc": "Title (DESC)",
+            "authorAsc": "Author Name (ASC)",
+            "authorDesc": "Author Name (DESC)",
+            "dateAsc": "Publish Date (Oldest)",
+            "dateDesc": "Publish Date (Newest)"
         }
     },
     "author": {
