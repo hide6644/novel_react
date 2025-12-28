@@ -76,7 +76,7 @@ const NovelList = () => {
         savePath: '/novels',
         defaultSearchParams: { title: '', author: '' },
         onSaveError: (error) => {
-            if (error.response && error.response.status === 409) {
+            if (isEdit && error.response && error.response.status === 409) {
                 alert(t('common.error.conflict'));
             } else {
                 alert(t('common.error.opFailed'));
