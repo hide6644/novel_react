@@ -30,7 +30,7 @@ class NovelControllerTest {
 
     @Test
     void search_NoQuery_ShouldReturnPageOfNovels() {
-        NovelResponse novel = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now());
+        NovelResponse novel = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now(), 1);
         Page<NovelResponse> page = new PageImpl<>(Arrays.asList(novel));
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -44,7 +44,7 @@ class NovelControllerTest {
     @Test
     void search_WithTitle_ShouldReturnPageOfMatchingNovels() {
         String title = "Title";
-        NovelResponse novel = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now());
+        NovelResponse novel = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now(), 1);
         Page<NovelResponse> page = new PageImpl<>(Arrays.asList(novel));
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -58,7 +58,7 @@ class NovelControllerTest {
     @Test
     void search_WithAuthor_ShouldReturnPageOfMatchingNovels() {
         String author = "Author";
-        NovelResponse novel = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now());
+        NovelResponse novel = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now(), 1);
         Page<NovelResponse> page = new PageImpl<>(Arrays.asList(novel));
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -73,7 +73,7 @@ class NovelControllerTest {
     void search_WithTitleAndAuthor_ShouldReturnPageOfMatchingNovels() {
         String title = "Title";
         String author = "Author";
-        NovelResponse novel = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now());
+        NovelResponse novel = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now(), 1);
         Page<NovelResponse> page = new PageImpl<>(Arrays.asList(novel));
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -87,7 +87,7 @@ class NovelControllerTest {
     @Test
     void get_ShouldReturnNovel() {
         Long id = 1L;
-        NovelResponse novel = new NovelResponse(id, "Title", "Description", "Author", 1L, LocalDate.now());
+        NovelResponse novel = new NovelResponse(id, "Title", "Description", "Author", 1L, LocalDate.now(), 1);
 
         when(novelService.get(id)).thenReturn(novel);
 
@@ -98,8 +98,8 @@ class NovelControllerTest {
 
     @Test
     void create_ShouldReturnCreatedNovel() {
-        NovelRequest request = new NovelRequest("Title", "Description", 1L, LocalDate.now());
-        NovelResponse response = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now());
+        NovelRequest request = new NovelRequest("Title", "Description", 1L, LocalDate.now(), 1);
+        NovelResponse response = new NovelResponse(1L, "Title", "Description", "Author", 1L, LocalDate.now(), 1);
 
         when(novelService.create(any(NovelRequest.class))).thenReturn(response);
 
@@ -111,9 +111,9 @@ class NovelControllerTest {
     @Test
     void update_ShouldReturnUpdatedNovel() {
         Long id = 1L;
-        NovelRequest request = new NovelRequest("Updated Title", "Updated Description", 1L, LocalDate.now());
+        NovelRequest request = new NovelRequest("Updated Title", "Updated Description", 1L, LocalDate.now(), 1);
         NovelResponse response = new NovelResponse(id, "Updated Title", "Updated Description", "Author", 1L,
-                LocalDate.now());
+                LocalDate.now(), 1);
 
         when(novelService.update(eq(id), any(NovelRequest.class))).thenReturn(response);
 

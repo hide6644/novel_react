@@ -44,12 +44,13 @@ const NovelList = () => {
         title: z.string().min(1, t('validate.required')).max(100, t('validate.maxLength', { max: 100 })),
         description: z.string().max(1000, t('validate.maxLength', { max: 1000 })).optional(),
         authorId: z.union([z.number(), z.string()]).refine(val => val !== '', t('validate.select')),
-        publishDate: z.string().optional().nullable()
+        publishDate: z.string().optional().nullable(),
+        version: z.number().optional()
     });
 
     const { control, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(schema),
-        defaultValues: { title: '', description: '', authorId: '', publishDate: '' }
+        defaultValues: { title: '', description: '', authorId: '', publishDate: '', version: 0 }
     });
 
     // useCrud Hook
@@ -74,6 +75,13 @@ const NovelList = () => {
         deletePath: '/novels',
         savePath: '/novels',
         defaultSearchParams: { title: '', author: '' },
+        onSaveError: (error) => {
+            if (error.response && error.response.status === 409) {
+                alert(t('common.error.conflict'));
+            } else {
+                alert(t('common.error.opFailed'));
+            }
+        }
     });
 
     // Fetch Authors for Autocomplete
@@ -98,10 +106,11 @@ const NovelList = () => {
                     title: item.title,
                     description: item.description || '',
                     authorId: item.authorId,
-                    publishDate: item.publishDate || ''
+                    publishDate: item.publishDate || '',
+                    version: item.version
                 });
             } else {
-                reset({ title: '', description: '', authorId: '', publishDate: '' });
+                reset({ title: '', description: '', authorId: '', publishDate: '', version: 0 });
             }
         });
     };

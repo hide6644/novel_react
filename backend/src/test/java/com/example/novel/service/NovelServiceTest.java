@@ -82,7 +82,7 @@ class NovelServiceTest {
     void create_ShouldReturnCreatedNovel_WhenAuthorExists() {
         // Arrange
         Long authorId = 1L;
-        NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now());
+        NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now(), 1);
         Author author = new Author(authorId, "Author", LocalDate.now(), "Country");
         Novel savedNovel = new Novel(1L, "Title", "Description", LocalDate.now(), author);
 
@@ -105,7 +105,7 @@ class NovelServiceTest {
     void create_ShouldThrowException_WhenAuthorNotFound() {
         // Arrange
         Long authorId = 99L;
-        NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now());
+        NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now(), 1);
 
         when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
 
@@ -124,7 +124,7 @@ class NovelServiceTest {
         // Arrange
         Long novelId = 1L;
         Long authorId = 1L;
-        NovelRequest request = new NovelRequest("Updated Title", "Updated Description", authorId, LocalDate.now());
+        NovelRequest request = new NovelRequest("Updated Title", "Updated Description", authorId, LocalDate.now(), 1);
 
         Author author = new Author(authorId, "Author", LocalDate.now(), "Country");
         Novel existingNovel = new Novel(novelId, "Old Title", "Old Description", LocalDate.now(), author);
@@ -150,7 +150,7 @@ class NovelServiceTest {
     void update_ShouldThrowException_WhenNovelNotFound() {
         // Arrange
         Long novelId = 99L;
-        NovelRequest request = new NovelRequest("Title", "Description", 1L, LocalDate.now());
+        NovelRequest request = new NovelRequest("Title", "Description", 1L, LocalDate.now(), 1);
 
         when(novelRepository.findById(novelId)).thenReturn(Optional.empty());
 
@@ -169,7 +169,7 @@ class NovelServiceTest {
         // Arrange
         Long novelId = 1L;
         Long authorId = 99L;
-        NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now());
+        NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now(), 1);
         Author existingAuthor = new Author(1L, "Author", LocalDate.now(), "Country");
         Novel existingNovel = new Novel(novelId, "Title", "Description", LocalDate.now(), existingAuthor);
 

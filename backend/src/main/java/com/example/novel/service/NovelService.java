@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,6 +54,10 @@ public class NovelService {
         Author author = authorRepository.findById(dto.authorId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
 
+        if (dto.version() == null || !novel.getVersion().equals(dto.version())) {
+            throw new ObjectOptimisticLockingFailureException(Novel.class, novel.getId());
+        }
+
         novel.setTitle(dto.title());
         novel.setDescription(dto.description());
         novel.setPublishDate(dto.publishDate());
@@ -78,6 +83,7 @@ public class NovelService {
                 novel.getDescription(),
                 novel.getAuthor().getName(),
                 novel.getAuthor().getId(),
-                novel.getPublishDate());
+                novel.getPublishDate(),
+                novel.getVersion());
     }
 }

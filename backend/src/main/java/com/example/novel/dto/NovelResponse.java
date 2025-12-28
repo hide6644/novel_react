@@ -8,5 +8,6 @@ public record NovelResponse(
         String description,
         String authorName,
         Long authorId,
-        LocalDate publishDate) {
+        LocalDate publishDate,
+        Integer version) {
 }

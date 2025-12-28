@@ -9,5 +9,6 @@ public record NovelRequest(
         @NotBlank @Size(max = 100) String title,
         @Size(max = 1000) String description,
         @NotNull Long authorId,
-        LocalDate publishDate) {
+        LocalDate publishDate,
+        Integer version) {
 }

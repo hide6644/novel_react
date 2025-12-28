@@ -112,4 +112,8 @@
          <appender-ref ref="SqlFile" />
     </logger>
 
+    <logger name="org.hibernate.orm.jdbc.bind" level="trace" additivity="false">
+         <appender-ref ref="SqlFile" />
+    </logger>
+
 </configuration>
