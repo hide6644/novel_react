@@ -136,7 +136,7 @@ const NovelList = () => {
                 onSearch={handleSearch}
                 buttonLabel={t('common.btn.search')}
             >
-                <Grid size={{ xs: 12, sm: 5 }}>
+                <Grid size={{ xs: 12, sm: 4 }}>
                     <TextField
                         fullWidth
                         label={t('novel.search.title')}
@@ -145,7 +145,7 @@ const NovelList = () => {
                         size="small"
                     />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 5 }}>
+                <Grid size={{ xs: 12, sm: 4 }}>
                     <TextField
                         fullWidth
                         label={t('novel.search.author')}
@@ -154,28 +154,27 @@ const NovelList = () => {
                         size="small"
                     />
                 </Grid>
+                <Grid size={{ xs: 12, sm: 2 }}>
+                    <FormControl size="small" fullWidth>
+                        <InputLabel id="sort-select-label">{t('common.sort.label')}</InputLabel>
+                        <Select
+                            labelId="sort-select-label"
+                            id="sort-select"
+                            value={sort}
+                            label={t('common.sort.label')}
+                            onChange={(e) => handleSort(e.target.value)}
+                        >
+                            <MenuItem value=""><em>{t('common.sort.none')}</em></MenuItem>
+                            <MenuItem value="title,asc">{t('novel.sort.titleAsc')}</MenuItem>
+                            <MenuItem value="title,desc">{t('novel.sort.titleDesc')}</MenuItem>
+                            <MenuItem value="author.name,asc">{t('novel.sort.authorAsc')}</MenuItem>
+                            <MenuItem value="author.name,desc">{t('novel.sort.authorDesc')}</MenuItem>
+                            <MenuItem value="publishDate,asc">{t('novel.sort.dateAsc')}</MenuItem>
+                            <MenuItem value="publishDate,desc">{t('novel.sort.dateDesc')}</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
             </SearchBox>
-
-            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                <FormControl size="small" sx={{ minWidth: 200 }}>
-                    <InputLabel id="sort-select-label">{t('common.sort.label')}</InputLabel>
-                    <Select
-                        labelId="sort-select-label"
-                        id="sort-select"
-                        value={sort}
-                        label={t('common.sort.label')}
-                        onChange={(e) => handleSort(e.target.value)}
-                    >
-                        <MenuItem value=""><em>{t('common.sort.none')}</em></MenuItem>
-                        <MenuItem value="title,asc">{t('novel.sort.titleAsc')}</MenuItem>
-                        <MenuItem value="title,desc">{t('novel.sort.titleDesc')}</MenuItem>
-                        <MenuItem value="author.name,asc">{t('novel.sort.authorAsc')}</MenuItem>
-                        <MenuItem value="author.name,desc">{t('novel.sort.authorDesc')}</MenuItem>
-                        <MenuItem value="publishDate,asc">{t('novel.sort.dateAsc')}</MenuItem>
-                        <MenuItem value="publishDate,desc">{t('novel.sort.dateDesc')}</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
 
             <Grid container spacing={3}>
                 {novelsLoading ? (
