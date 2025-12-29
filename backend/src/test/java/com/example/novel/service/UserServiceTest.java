@@ -14,9 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.example.novel.exception.DuplicateResourceException;
+import com.example.novel.exception.InvalidCredentialsException;
+import com.example.novel.exception.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -105,7 +107,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(request.username())).thenReturn(Optional.of(new User()));
 
         // Act & Assert
-        assertThrows(ResponseStatusException.class, () -> userService.create(request));
+        assertThrows(DuplicateResourceException.class, () -> userService.create(request));
         verify(userRepository, times(1)).findByUsername(request.username());
         verify(userRepository, never()).save(any(User.class));
     }
@@ -155,7 +157,7 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResponseStatusException.class, () -> userService.update(userId, request));
+        assertThrows(ResourceNotFoundException.class, () -> userService.update(userId, request));
         verify(userRepository, times(1)).findById(userId);
     }
 
@@ -198,7 +200,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResponseStatusException.class, () -> userService.searchByUsername(username));
+        assertThrows(ResourceNotFoundException.class, () -> userService.searchByUsername(username));
         verify(userRepository, times(1)).findByUsername(username);
     }
 
@@ -236,7 +238,7 @@ class UserServiceTest {
         when(passwordEncoder.matches(request.currentPassword(), user.getPassword())).thenReturn(false);
 
         // Act & Assert
-        assertThrows(ResponseStatusException.class, () -> userService.changePassword(username, request));
+        assertThrows(InvalidCredentialsException.class, () -> userService.changePassword(username, request));
         verify(userRepository, never()).save(user);
     }
 

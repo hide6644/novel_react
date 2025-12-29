@@ -13,8 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import com.example.novel.exception.DuplicateResourceException;
+import com.example.novel.exception.InvalidCredentialsException;
+import com.example.novel.exception.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,7 +40,7 @@ public class UserService {
 
     public UserResponse create(UserCreateRequest dto) {
         if (userRepository.findByUsername(dto.username()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
+            throw new DuplicateResourceException("Username already exists");
         }
 
         User user = new User();
@@ -64,7 +65,7 @@ public class UserService {
 
     public UserResponse update(Long id, UserUpdateRequest dto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (dto.password() != null && !dto.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(dto.password()));
@@ -92,16 +93,16 @@ public class UserService {
 
     public UserResponse searchByUsername(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return toDto(user);
     }
 
     public void changePassword(String username, ChangePasswordRequest dto) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(dto.currentPassword(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid current password");
+            throw new InvalidCredentialsException("Invalid current password");
         }
 
         user.setPassword(passwordEncoder.encode(dto.newPassword()));
@@ -111,7 +112,7 @@ public class UserService {
 
     public UserResponse updateProfile(String username, UserProfileUpdateRequest dto) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setFirstName(dto.firstName());
         user.setLastName(dto.lastName());
         return toDto(userRepository.save(user));

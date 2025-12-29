@@ -15,8 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import com.example.novel.exception.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -110,11 +109,9 @@ class NovelServiceTest {
         when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             novelService.create(request);
         });
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-        assertEquals("Author not found", exception.getReason());
         verify(authorRepository, times(1)).findById(authorId);
         verify(novelRepository, never()).save(any(Novel.class));
     }
@@ -128,7 +125,9 @@ class NovelServiceTest {
 
         Author author = new Author(authorId, "Author", LocalDate.now(), "Country");
         Novel existingNovel = new Novel(novelId, "Old Title", "Old Description", LocalDate.now(), author);
+        existingNovel.setVersion(1);
         Novel updatedNovel = new Novel(novelId, "Updated Title", "Updated Description", LocalDate.now(), author);
+        updatedNovel.setVersion(2);
 
         when(novelRepository.findById(novelId)).thenReturn(Optional.of(existingNovel));
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
@@ -155,11 +154,9 @@ class NovelServiceTest {
         when(novelRepository.findById(novelId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             novelService.update(novelId, request);
         });
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-        assertEquals("Novel not found", exception.getReason());
         verify(novelRepository, times(1)).findById(novelId);
         verify(novelRepository, never()).save(any(Novel.class));
     }
@@ -177,11 +174,9 @@ class NovelServiceTest {
         when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             novelService.update(novelId, request);
         });
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-        assertEquals("Author not found", exception.getReason());
         verify(novelRepository, times(1)).findById(novelId);
         verify(authorRepository, times(1)).findById(authorId);
         verify(novelRepository, never()).save(any(Novel.class));
@@ -226,11 +221,9 @@ class NovelServiceTest {
         when(novelRepository.findById(novelId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             novelService.get(novelId);
         });
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-        assertEquals("Novel not found", exception.getReason());
         verify(novelRepository, times(1)).findById(novelId);
     }
 }

@@ -13,8 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import com.example.novel.exception.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -150,11 +149,9 @@ class AuthorServiceTest {
         when(authorRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             authorService.update(id, request);
         });
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-        assertEquals("Author not found", exception.getReason());
         verify(authorRepository, times(1)).findById(id);
         verify(authorRepository, never()).save(any(Author.class));
     }
@@ -196,11 +193,9 @@ class AuthorServiceTest {
         when(authorRepository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             authorService.get(id);
         });
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
-        assertEquals("Author not found", exception.getReason());
         verify(authorRepository, times(1)).findById(id);
     }
 }

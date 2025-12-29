@@ -3,14 +3,13 @@ package com.example.novel.service;
 import com.example.novel.dto.AuthorRequest;
 import com.example.novel.dto.AuthorResponse;
 import com.example.novel.entity.Author;
+import com.example.novel.exception.ResourceNotFoundException;
 import com.example.novel.repository.AuthorRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +50,7 @@ public class AuthorService {
 
     public AuthorResponse update(Long id, AuthorRequest dto) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
         author.setName(dto.name());
         author.setBirthDate(dto.birthDate());
         author.setNationality(dto.nationality());
@@ -64,7 +63,7 @@ public class AuthorService {
 
     public AuthorResponse get(Long id) {
         Author author = authorRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found"));
         return toDto(author);
     }
 
