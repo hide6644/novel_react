@@ -37,7 +37,7 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
