@@ -1,26 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
 import { useTranslation } from 'react-i18next';
 
 const useCrud = ({
+    // API Config
     queryKey,
     fetchPath,
     deletePath,
     savePath,
+
+    // Pagination
+    isPaginated = true,
+    pageSize: initialPageSize = 10,
+
+    // Search & Sort
     defaultSearchParams = {},
     searchParamMapper = (params) => params,
+
+    // Callbacks
     onSaveSuccess = () => { },
     onSaveError = null,
     onDeleteSuccess = () => { },
-    isPaginated = true,
 }) => {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
 
     // Pagination
     const [page, setPage] = useState(1);
-    const [pageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(initialPageSize);
+
+    // Update pageSize when initialPageSize changes
+    useEffect(() => {
+        setPageSize(initialPageSize);
+    }, [initialPageSize]);
 
     // Search
     const [searchParams, setSearchParams] = useState(defaultSearchParams);
@@ -140,17 +153,23 @@ const useCrud = ({
     };
 
     return {
-        // State
+        // Data
+        items,
+        isLoading,
+
+        // Pagination
         page,
         pageSize,
+        totalPages,
+
+        // Search & Sort
         searchParams,
         sort,
+
+        // Modal State
         showModal,
         isEdit,
         editingId,
-        items,
-        totalPages,
-        isLoading,
 
         // Actions
         handleSearch,

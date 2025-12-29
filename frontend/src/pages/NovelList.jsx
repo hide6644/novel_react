@@ -20,8 +20,11 @@ import {
     MenuItem,
     Pagination,
     Select,
+    Skeleton,
     TextField,
-    Typography
+    Typography,
+    useMediaQuery,
+    useTheme
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -59,30 +62,61 @@ const NovelList = () => {
         defaultValues: { title: '', description: '', authorId: '', publishDate: '', version: 0 }
     });
 
-    // useCrud Hook
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const getPageSize = () => {
+        if (isSmallScreen) return 6;
+        if (isMediumScreen) return 8;
+        return 9;
+    };
+
+    const dynamicPageSize = getPageSize();
+
     const {
-        page,
+        // Data
         items: novels,
-        totalPages,
         isLoading: novelsLoading,
+
+        // Pagination
+        page,
+        pageSize,
+        totalPages,
+
+        // Search & Sort
+        sort,
+
+        // Modal State
+        showModal,
+        isEdit,
+
+        // Actions
+        handleSearch: applySearch,
+        handleSort,
         handlePageChange,
         handleDelete,
         openModal: openCrudModal,
         closeModal,
         handleSave,
-        showModal,
-        isEdit,
+
+        // Mutations
         deleteMutation,
-        saveMutation,
-        handleSearch: applySearch,
-        handleSort,
-        sort
+        saveMutation
     } = useCrud({
+        // API Config
         queryKey: ['novels'],
         fetchPath: '/novels',
         deletePath: '/novels',
         savePath: '/novels',
+
+        // Pagination
+        pageSize: dynamicPageSize,
+
+        // Search & Sort
         defaultSearchParams: { title: '', author: '' },
+
+        // Callbacks
         onSaveError: (error) => {
             if (isEdit && error.response && error.response.status === 409) {
                 alert(t('common.error.conflict'));
@@ -176,9 +210,32 @@ const NovelList = () => {
                 </Grid>
             </SearchBox>
 
+            <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
+                <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={handlePageChange}
+                    color="primary"
+                    showFirstButton
+                    showLastButton
+                />
+            </Box>
+
             <Grid container spacing={3}>
                 {novelsLoading ? (
-                    <Typography sx={{ m: 2 }}>{t('common.loading')}</Typography>
+                    // Skeleton Loading
+                    Array.from(new Array(pageSize)).map((_, index) => (
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+                            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                <CardContent sx={{ flexGrow: 1 }}>
+                                    <Skeleton variant="text" width="80%" height={32} sx={{ mb: 1 }} />
+                                    <Skeleton variant="text" width="60%" sx={{ mb: 1.5 }} />
+                                    <Skeleton variant="rectangular" height={60} sx={{ mb: 2 }} />
+                                    <Skeleton variant="text" width="40%" />
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))
                 ) : novels.map(novel => (
                     <Grid size={{ xs: 12, sm: 6, md: 4 }} key={novel.id}>
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>

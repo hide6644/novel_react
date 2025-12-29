@@ -14,6 +14,7 @@ import {
     IconButton,
     Pagination,
     Paper,
+    Skeleton,
     Table,
     TableBody,
     TableCell,
@@ -54,25 +55,37 @@ const AuthorList = () => {
     });
 
     const {
-        page,
+        // Data
         items: authors,
-        totalPages,
         isLoading: authorsLoading,
+
+        // Pagination
+        page,
+        totalPages,
+
+        // Modal State
+        showModal,
+        isEdit,
+
+        // Actions
+        handleSearch: applySearch,
         handlePageChange,
         handleDelete,
         openModal: openCrudModal,
         closeModal,
         handleSave,
-        showModal,
-        isEdit,
+
+        // Mutations
         deleteMutation,
-        saveMutation,
-        handleSearch: applySearch
+        saveMutation
     } = useCrud({
+        // API Config
         queryKey: ['authors'],
         fetchPath: '/authors',
         deletePath: '/authors',
         savePath: '/authors',
+
+        // Search & Sort
         defaultSearchParams: { name: '' }
     });
 
@@ -118,6 +131,17 @@ const AuthorList = () => {
                 </Grid>
             </SearchBox>
 
+            <Box sx={{ py: 2, display: 'flex', justifyContent: 'center' }}>
+                <Pagination
+                    count={totalPages}
+                    page={page}
+                    onChange={handlePageChange}
+                    color="primary"
+                    showFirstButton
+                    showLastButton
+                />
+            </Box>
+
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -131,11 +155,15 @@ const AuthorList = () => {
                     </TableHead>
                     <TableBody>
                         {authorsLoading ? (
-                            <TableRow>
-                                <TableCell colSpan={user?.role === 'ADMIN' ? 5 : 4} align="center">
-                                    {t('common.loading')}
-                                </TableCell>
-                            </TableRow>
+                            Array.from(new Array(10)).map((_, index) => (
+                                <TableRow key={index}>
+                                    <TableCell><Skeleton variant="text" /></TableCell>
+                                    <TableCell><Skeleton variant="text" /></TableCell>
+                                    <TableCell><Skeleton variant="text" /></TableCell>
+                                    <TableCell><Skeleton variant="text" /></TableCell>
+                                    {user?.role === 'ADMIN' && <TableCell><Skeleton variant="circular" width={30} height={30} /></TableCell>}
+                                </TableRow>
+                            ))
                         ) : authors.map((author) => (
                             <TableRow key={author.id}>
                                 <TableCell>{author.id}</TableCell>
