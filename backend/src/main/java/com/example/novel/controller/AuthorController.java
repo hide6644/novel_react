@@ -21,19 +21,13 @@ public class AuthorController {
 
     @GetMapping("/autocomplete")
     public List<AuthorResponse> search(@RequestParam(required = false) String name) {
-        if (name == null) {
-            return authorService.getAll();
-        }
-        return authorService.searchByName(name);
+        return authorService.search(name);
     }
 
     @GetMapping
     public PagedModel<AuthorResponse> search(@RequestParam(required = false) String name,
             @PageableDefault(size = 10) Pageable pageable) {
-        if (name == null) {
-            return new PagedModel<>(authorService.getAll(pageable));
-        }
-        return new PagedModel<>(authorService.searchByName(name, pageable));
+        return new PagedModel<>(authorService.search(name, pageable));
     }
 
     @GetMapping("/{id}")

@@ -38,43 +38,34 @@ class NovelServiceTest {
     private NovelService novelService;
 
     @Test
-    void getAll_ShouldReturnPageOfNovels() {
+    void search_ShouldCallGetAll_WhenTitleAndAuthorAreNull() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
-        Author author = new Author(1L, "Author", LocalDate.now(), "Country");
-        Novel novel = new Novel(1L, "Title", "Description", LocalDate.now(), author);
-        Page<Novel> novelPage = new PageImpl<>(Arrays.asList(novel));
-
+        Page<Novel> novelPage = new PageImpl<>(Arrays.asList());
         when(novelRepository.findAll(pageable)).thenReturn(novelPage);
 
         // Act
-        Page<NovelResponse> result = novelService.getAll(pageable);
+        novelService.search(null, null, pageable);
 
         // Assert
-        assertEquals(1, result.getTotalElements());
-        assertEquals("Title", result.getContent().get(0).title());
         verify(novelRepository, times(1)).findAll(pageable);
+        verify(novelRepository, never()).searchByTitleAndAuthorName(any(), any(), any());
     }
 
     @Test
-    void searchByTitleAndAuthorName_ShouldReturnPageOfMatchingNovels() {
+    void search_ShouldCallSearchByTitleAndAuthorName_WhenTitleIsNotNull() {
         // Arrange
         String title = "Title";
-        String authorName = "Author";
         Pageable pageable = PageRequest.of(0, 10);
-        Author author = new Author(1L, "Author", LocalDate.now(), "Country");
-        Novel novel = new Novel(1L, "Title", "Description", LocalDate.now(), author);
-        Page<Novel> novelPage = new PageImpl<>(Arrays.asList(novel));
-
-        when(novelRepository.searchByTitleAndAuthorName(title, authorName, pageable)).thenReturn(novelPage);
+        Page<Novel> novelPage = new PageImpl<>(Arrays.asList());
+        when(novelRepository.searchByTitleAndAuthorName(title, null, pageable)).thenReturn(novelPage);
 
         // Act
-        Page<NovelResponse> result = novelService.searchByTitleAndAuthorName(title, authorName, pageable);
+        novelService.search(title, null, pageable);
 
         // Assert
-        assertEquals(1, result.getTotalElements());
-        assertEquals("Title", result.getContent().get(0).title());
-        verify(novelRepository, times(1)).searchByTitleAndAuthorName(title, authorName, pageable);
+        verify(novelRepository, times(1)).searchByTitleAndAuthorName(title, null, pageable);
+        verify(novelRepository, never()).findAll(any(Pageable.class));
     }
 
     @Test

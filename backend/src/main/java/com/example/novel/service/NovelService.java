@@ -23,12 +23,11 @@ public class NovelService {
     private final NovelRepository novelRepository;
     private final AuthorRepository authorRepository;
 
-    public Page<NovelResponse> getAll(Pageable pageable) {
-        return novelRepository.findAll(pageable)
-                .map(this::toDto);
-    }
-
-    public Page<NovelResponse> searchByTitleAndAuthorName(String title, String authorName, Pageable pageable) {
+    public Page<NovelResponse> search(String title, String authorName, Pageable pageable) {
+        if (title == null && authorName == null) {
+            return novelRepository.findAll(pageable)
+                    .map(this::toDto);
+        }
         return novelRepository.searchByTitleAndAuthorName(title, authorName, pageable)
                 .map(this::toDto);
     }

@@ -18,24 +18,22 @@ import java.util.stream.Collectors;
 public class AuthorService {
     private final AuthorRepository authorRepository;
 
-    public List<AuthorResponse> getAll() {
-        return authorRepository.findAll().stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
-    }
-
-    public Page<AuthorResponse> getAll(Pageable pageable) {
-        return authorRepository.findAll(pageable)
-                .map(this::toDto);
-    }
-
-    public List<AuthorResponse> searchByName(String name) {
+    public List<AuthorResponse> search(String name) {
+        if (name == null) {
+            return authorRepository.findAll().stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+        }
         return authorRepository.findByNameContainingIgnoreCase(name).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public Page<AuthorResponse> searchByName(String name, Pageable pageable) {
+    public Page<AuthorResponse> search(String name, Pageable pageable) {
+        if (name == null) {
+            return authorRepository.findAll(pageable)
+                    .map(this::toDto);
+        }
         return authorRepository.findByNameContainingIgnoreCase(name, pageable)
                 .map(this::toDto);
     }

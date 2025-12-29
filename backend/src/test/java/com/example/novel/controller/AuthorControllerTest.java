@@ -34,11 +34,11 @@ class AuthorControllerTest {
         AuthorResponse author = new AuthorResponse(1L, "Author 1", LocalDate.now(), "Japan");
         List<AuthorResponse> authors = Arrays.asList(author);
 
-        when(authorService.getAll()).thenReturn(authors);
+        when(authorService.search(null)).thenReturn(authors);
 
         authorController.search(null);
 
-        verify(authorService).getAll();
+        verify(authorService).search(null);
     }
 
     @Test
@@ -47,11 +47,11 @@ class AuthorControllerTest {
         AuthorResponse author = new AuthorResponse(1L, "Author 1", LocalDate.now(), "Japan");
         List<AuthorResponse> authors = Arrays.asList(author);
 
-        when(authorService.searchByName(query)).thenReturn(authors);
+        when(authorService.search(query)).thenReturn(authors);
 
         authorController.search(query);
 
-        verify(authorService).searchByName(query);
+        verify(authorService).search(query);
     }
 
     @Test
@@ -60,11 +60,11 @@ class AuthorControllerTest {
         Page<AuthorResponse> page = new PageImpl<>(Arrays.asList(author));
         Pageable pageable = PageRequest.of(0, 10);
 
-        when(authorService.getAll(any(Pageable.class))).thenReturn(page);
+        when(authorService.search(null, pageable)).thenReturn(page);
 
         authorController.search(null, pageable);
 
-        verify(authorService).getAll(any(Pageable.class));
+        verify(authorService).search(null, pageable);
     }
 
     @Test
@@ -74,11 +74,11 @@ class AuthorControllerTest {
         Page<AuthorResponse> page = new PageImpl<>(Arrays.asList(author));
         Pageable pageable = PageRequest.of(0, 10);
 
-        when(authorService.searchByName(eq(query), any(Pageable.class))).thenReturn(page);
+        when(authorService.search(eq(query), any(Pageable.class))).thenReturn(page);
 
         authorController.search(query, pageable);
 
-        verify(authorService).searchByName(eq(query), any(Pageable.class));
+        verify(authorService).search(eq(query), any(Pageable.class));
     }
 
     @Test

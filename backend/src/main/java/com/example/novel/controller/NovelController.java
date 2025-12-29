@@ -24,10 +24,7 @@ public class NovelController {
     public PagedModel<NovelResponse> search(@RequestParam(required = false) String title,
             @RequestParam(required = false) String author,
             @PageableDefault(size = 10) Pageable pageable) {
-        if (title == null && author == null) {
-            return new PagedModel<>(novelService.getAll(pageable));
-        }
-        return new PagedModel<>(novelService.searchByTitleAndAuthorName(title, author, pageable));
+        return new PagedModel<>(novelService.search(title, author, pageable));
     }
 
     @GetMapping("/{id}")

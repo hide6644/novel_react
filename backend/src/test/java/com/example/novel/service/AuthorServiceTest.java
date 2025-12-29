@@ -34,14 +34,14 @@ class AuthorServiceTest {
     private AuthorService authorService;
 
     @Test
-    void getAll_ShouldReturnListOfAuthors() {
+    void search_ShouldReturnListOfAuthors_WhenNameIsNull() {
         // Arrange
         Author author1 = new Author(1L, "Author 1", LocalDate.now(), "Japan");
         Author author2 = new Author(2L, "Author 2", LocalDate.now(), "USA");
         when(authorRepository.findAll()).thenReturn(Arrays.asList(author1, author2));
 
         // Act
-        List<AuthorResponse> result = authorService.getAll();
+        List<AuthorResponse> result = authorService.search(null);
 
         // Assert
         assertEquals(2, result.size());
@@ -51,7 +51,7 @@ class AuthorServiceTest {
     }
 
     @Test
-    void getAll_WithPageable_ShouldReturnPageOfAuthors() {
+    void search_ShouldReturnPageOfAuthors_WhenNameIsNull() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
         Author author = new Author(1L, "Author 1", LocalDate.now(), "Japan");
@@ -59,7 +59,7 @@ class AuthorServiceTest {
         when(authorRepository.findAll(pageable)).thenReturn(authorPage);
 
         // Act
-        Page<AuthorResponse> result = authorService.getAll(pageable);
+        Page<AuthorResponse> result = authorService.search(null, pageable);
 
         // Assert
         assertEquals(1, result.getTotalElements());
@@ -68,14 +68,14 @@ class AuthorServiceTest {
     }
 
     @Test
-    void searchByName_ShouldReturnListOfMatchingAuthors() {
+    void search_ShouldReturnListOfMatchingAuthors_WhenNameIsProvided() {
         // Arrange
         String name = "Test";
         Author author = new Author(1L, "Test Author", LocalDate.now(), "Japan");
         when(authorRepository.findByNameContainingIgnoreCase(name)).thenReturn(Arrays.asList(author));
 
         // Act
-        List<AuthorResponse> result = authorService.searchByName(name);
+        List<AuthorResponse> result = authorService.search(name);
 
         // Assert
         assertEquals(1, result.size());
@@ -84,7 +84,7 @@ class AuthorServiceTest {
     }
 
     @Test
-    void searchByName_WithPageable_ShouldReturnPageOfMatchingAuthors() {
+    void search_ShouldReturnPageOfMatchingAuthors_WhenNameIsProvided() {
         // Arrange
         String name = "Test";
         Pageable pageable = PageRequest.of(0, 10);
@@ -93,7 +93,7 @@ class AuthorServiceTest {
         when(authorRepository.findByNameContainingIgnoreCase(name, pageable)).thenReturn(authorPage);
 
         // Act
-        Page<AuthorResponse> result = authorService.searchByName(name, pageable);
+        Page<AuthorResponse> result = authorService.search(name, pageable);
 
         // Assert
         assertEquals(1, result.getTotalElements());

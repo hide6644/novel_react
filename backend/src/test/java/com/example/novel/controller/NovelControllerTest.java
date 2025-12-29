@@ -34,11 +34,11 @@ class NovelControllerTest {
         Page<NovelResponse> page = new PageImpl<>(Arrays.asList(novel));
         Pageable pageable = PageRequest.of(0, 10);
 
-        when(novelService.getAll(any(Pageable.class))).thenReturn(page);
+        when(novelService.search(null, null, pageable)).thenReturn(page);
 
         novelController.search(null, null, pageable);
 
-        verify(novelService).getAll(any(Pageable.class));
+        verify(novelService).search(null, null, pageable);
     }
 
     @Test
@@ -48,11 +48,11 @@ class NovelControllerTest {
         Page<NovelResponse> page = new PageImpl<>(Arrays.asList(novel));
         Pageable pageable = PageRequest.of(0, 10);
 
-        when(novelService.searchByTitleAndAuthorName(eq(title), eq(null), any(Pageable.class))).thenReturn(page);
+        when(novelService.search(eq(title), eq(null), any(Pageable.class))).thenReturn(page);
 
         novelController.search(title, null, pageable);
 
-        verify(novelService).searchByTitleAndAuthorName(eq(title), eq(null), any(Pageable.class));
+        verify(novelService).search(eq(title), eq(null), any(Pageable.class));
     }
 
     @Test
@@ -62,11 +62,11 @@ class NovelControllerTest {
         Page<NovelResponse> page = new PageImpl<>(Arrays.asList(novel));
         Pageable pageable = PageRequest.of(0, 10);
 
-        when(novelService.searchByTitleAndAuthorName(eq(null), eq(author), any(Pageable.class))).thenReturn(page);
+        when(novelService.search(eq(null), eq(author), any(Pageable.class))).thenReturn(page);
 
         novelController.search(null, author, pageable);
 
-        verify(novelService).searchByTitleAndAuthorName(eq(null), eq(author), any(Pageable.class));
+        verify(novelService).search(eq(null), eq(author), any(Pageable.class));
     }
 
     @Test
@@ -77,11 +77,11 @@ class NovelControllerTest {
         Page<NovelResponse> page = new PageImpl<>(Arrays.asList(novel));
         Pageable pageable = PageRequest.of(0, 10);
 
-        when(novelService.searchByTitleAndAuthorName(eq(title), eq(author), any(Pageable.class))).thenReturn(page);
+        when(novelService.search(eq(title), eq(author), any(Pageable.class))).thenReturn(page);
 
         novelController.search(title, author, pageable);
 
-        verify(novelService).searchByTitleAndAuthorName(eq(title), eq(author), any(Pageable.class));
+        verify(novelService).search(eq(title), eq(author), any(Pageable.class));
     }
 
     @Test
