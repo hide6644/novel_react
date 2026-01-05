@@ -15,18 +15,18 @@
     "@hookform/resolvers": "^5.2.2",
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
-    "@tanstack/react-query": "^5.90.14",
+    "@tanstack/react-query": "^5.90.16",
     "@tanstack/react-query-devtools": "^5.91.2",
     "axios": "^1.13.2",
     "i18next": "^25.7.3",
     "i18next-browser-languagedetector": "^8.2.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-hook-form": "^7.69.0",
-    "react-i18next": "^16.5.0",
+    "react-hook-form": "^7.70.0",
+    "react-i18next": "^16.5.1",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.11.0",
-    "zod": "^4.2.1"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/react": "^19.2.7",
@@ -37,7 +37,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.26",
-    "globals": "^16.5.0",
+    "globals": "^17.0.0",
     "vite": "^7.3.0"
   }
 }

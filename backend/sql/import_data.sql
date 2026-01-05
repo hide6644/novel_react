@@ -1,3 +1,16 @@
+-- Users Data
+-- Admin User (password: admin)
+INSERT INTO users (username, password, first_name, last_name, role, expiry_date, enabled, version) 
+VALUES ('admin', '$10$qZpGBUhLrH4iiYa7qqQ43uqBjrL/rZeydtT8jOzWeXmFQe148mEbq', 'Admin', 'User', 'ADMIN', '2125-01-01', true, 0);
+
+-- Normal User (password: user)
+INSERT INTO users (username, password, first_name, last_name, role, expiry_date, enabled, version) 
+VALUES ('user', '$2a$10$CIQLZeh.pz3IxmDuDecrIOOZs4J/o9S9s8NicWDKfID8GR3Vp7e1G', 'Normal', 'User', 'USER', DATE_ADD(CURRENT_DATE, INTERVAL 30 DAY), true, 0);
+
+-- Expired User (password: password)
+INSERT INTO users (username, password, first_name, last_name, role, expiry_date, enabled, version) 
+VALUES ('expired', '$2a$10$OxFlpKzteLw8oU3m8F4fVeAqkSItz9IGH53GA3O9CoQ0UHarrmxUu', 'Expired', 'User', 'USER', '2025-01-01', true, 0);
+
 -- Authors Data
 INSERT INTO authors (name, birth_date, nationality, version) VALUES ('夏目漱石', '1867-02-09', '日本', 0);
 INSERT INTO authors (name, birth_date, nationality, version) VALUES ('太宰治', '1909-06-19', '日本', 0);

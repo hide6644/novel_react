@@ -1,0 +1,47 @@
+services:
+  backend:
+    build: ./backend
+    container_name: novel-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:mariadb://novel-db:3306/${DB_NAME}
+      - DB_USERNAME=${DB_USER}
+      - DB_PASSWORD=${DB_PASS}
+      - SQL_INIT_MODE=never
+      - CORS_ALLOWED_ORIGINS_URL=http://localhost,http://localhost:5173
+    depends_on:
+      - novel-db
+    networks:
+      - novel-network
+
+  frontend:
+    build: ./frontend
+    container_name: novel-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - novel-network
+
+  novel-db:
+    image: mariadb:10.6
+    container_name: novel-db
+    environment:
+      - MARIADB_DATABASE=${DB_NAME}
+      - MARIADB_USER=${DB_USER}
+      - MARIADB_PASSWORD=${DB_PASS}
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASS}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./backend/sql:/docker-entrypoint-initdb.d
+    networks:
+      - novel-network
+
+networks:
+  novel-network:
+    driver: bridge
+
+volumes:
+  db_data:
