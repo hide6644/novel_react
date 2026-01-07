@@ -1,15 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
-const ReactCompilerConfig = {};
-
 export default defineConfig({
   plugins: [
     react({
       babel: {
         plugins: [
-          ["babel-plugin-react-compiler", ReactCompilerConfig],
+          ["babel-plugin-react-compiler"],
         ],
       },
     }),
@@ -23,22 +20,5 @@ export default defineConfig({
         secure: false,
       }
     }
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('@mui')) {
-              return 'mui';
-            }
-            if (id.includes('react-dom')) {
-              return 'react-dom';
-            }
-            return 'vendor';
-          }
-        },
-      },
-    },
   },
 })

@@ -1,7 +1,7 @@
 -- Users Data
 -- Admin User (password: admin)
 INSERT INTO users (username, password, first_name, last_name, role, expiry_date, enabled, version) 
-VALUES ('admin', '$10$qZpGBUhLrH4iiYa7qqQ43uqBjrL/rZeydtT8jOzWeXmFQe148mEbq', 'Admin', 'User', 'ADMIN', '2125-01-01', true, 0);
+VALUES ('admin', '$2a$10$0hZhppXT8CQt8uKuscF/6e3YoaHUuXmabWlg/6gbj5EdfFTkYNXGG', 'Admin', 'User', 'ADMIN', '2125-01-01', true, 0);
 
 -- Normal User (password: user)
 INSERT INTO users (username, password, first_name, last_name, role, expiry_date, enabled, version) 
