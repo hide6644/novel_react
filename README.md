@@ -31,6 +31,33 @@ This project is a comprehensive system designed to handle novel data, authors, a
 - **Internationalization (i18n)**: Full support for English and Japanese languages.
 - **Responsive Design**: Modern UI adapted for various screen sizes.
 
+## Environment Variables
+
+The application requires the following environment variables to be set.
+
+### Backend (Spring Boot)
+
+These variables are referenced in `backend/src/main/resources/application.properties`. You need to set these when running the backend locally.
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| `DB_URL` | JDBC URL for MariaDB | `jdbc:mariadb://localhost:3306/novel_db` |
+| `DB_USERNAME` | Database username | `novel` |
+| `DB_PASSWORD` | Database password | `password` |
+| `SQL_INIT_MODE` | Database initialization mode (`always` or `never`) | `always` |
+| `CORS_ALLOWED_ORIGINS_URL` | Allowed CORS origins (comma separated) | `http://localhost:5173` |
+
+### Docker Compose
+
+These variables are configured in the `.env` file in the project root and are used by `docker-compose.yml`.
+
+| Variable | Description | Default Example |
+| :--- | :--- | :--- |
+| `DB_NAME` | Database name | `novel_db` |
+| `DB_USER` | Database username | `novel` |
+| `DB_PASS` | Database password | `password` |
+| `DB_ROOT_PASS` | MariaDB root password | `password` |
+
 ## Getting Started
 
 ### Prerequisites
@@ -44,7 +71,7 @@ This project is a comprehensive system designed to handle novel data, authors, a
     ```bash
     cd backend
     ```
-2.  Configure the database connection in `src/main/resources/application.properties` if necessary (defaults to localhost:3306).
+2.  Set the necessary environment variables (see [Environment Variables](#environment-variables)) or configure `src/main/resources/application.properties`.
 3.  Build and run the application:
     ```bash
     ./mvnw spring-boot:run

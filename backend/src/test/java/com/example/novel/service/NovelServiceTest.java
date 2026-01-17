@@ -38,18 +38,17 @@ class NovelServiceTest {
     private NovelService novelService;
 
     @Test
-    void search_ShouldCallGetAll_WhenTitleAndAuthorAreNull() {
+    void search_ShouldCallSearchByTitleAndAuthorName_WhenTitleAndAuthorAreNull() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
         Page<Novel> novelPage = new PageImpl<>(Arrays.asList());
-        when(novelRepository.findAll(pageable)).thenReturn(novelPage);
+        when(novelRepository.searchByTitleAndAuthorName(null, null, pageable)).thenReturn(novelPage);
 
         // Act
         novelService.search(null, null, pageable);
 
         // Assert
-        verify(novelRepository, times(1)).findAll(pageable);
-        verify(novelRepository, never()).searchByTitleAndAuthorName(any(), any(), any());
+        verify(novelRepository, times(1)).searchByTitleAndAuthorName(null, null, pageable);
     }
 
     @Test

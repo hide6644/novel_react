@@ -24,10 +24,6 @@ public class NovelService {
     private final AuthorRepository authorRepository;
 
     public Page<NovelResponse> search(String title, String authorName, Pageable pageable) {
-        if (title == null && authorName == null) {
-            return novelRepository.findAll(pageable)
-                    .map(this::toDto);
-        }
         return novelRepository.searchByTitleAndAuthorName(title, authorName, pageable)
                 .map(this::toDto);
     }
