@@ -36,8 +36,8 @@ class AuthorServiceTest {
     @Test
     void search_ShouldReturnListOfAuthors_WhenNameIsNull() {
         // Arrange
-        Author author1 = new Author(1L, "Author 1", LocalDate.now(), "Japan");
-        Author author2 = new Author(2L, "Author 2", LocalDate.now(), "USA");
+        Author author1 = createAuthor(1L, "Author 1", LocalDate.now(), "Japan");
+        Author author2 = createAuthor(2L, "Author 2", LocalDate.now(), "USA");
         when(authorRepository.findAll()).thenReturn(Arrays.asList(author1, author2));
 
         // Act
@@ -54,7 +54,7 @@ class AuthorServiceTest {
     void search_ShouldReturnPageOfAuthors_WhenNameIsNull() {
         // Arrange
         Pageable pageable = PageRequest.of(0, 10);
-        Author author = new Author(1L, "Author 1", LocalDate.now(), "Japan");
+        Author author = createAuthor(1L, "Author 1", LocalDate.now(), "Japan");
         Page<Author> authorPage = new PageImpl<>(Arrays.asList(author));
         when(authorRepository.findAll(pageable)).thenReturn(authorPage);
 
@@ -71,7 +71,7 @@ class AuthorServiceTest {
     void search_ShouldReturnListOfMatchingAuthors_WhenNameIsProvided() {
         // Arrange
         String name = "Test";
-        Author author = new Author(1L, "Test Author", LocalDate.now(), "Japan");
+        Author author = createAuthor(1L, "Test Author", LocalDate.now(), "Japan");
         when(authorRepository.findByNameContainingIgnoreCase(name)).thenReturn(Arrays.asList(author));
 
         // Act
@@ -88,7 +88,7 @@ class AuthorServiceTest {
         // Arrange
         String name = "Test";
         Pageable pageable = PageRequest.of(0, 10);
-        Author author = new Author(1L, "Test Author", LocalDate.now(), "Japan");
+        Author author = createAuthor(1L, "Test Author", LocalDate.now(), "Japan");
         Page<Author> authorPage = new PageImpl<>(Arrays.asList(author));
         when(authorRepository.findByNameContainingIgnoreCase(name, pageable)).thenReturn(authorPage);
 
@@ -105,7 +105,7 @@ class AuthorServiceTest {
     void create_ShouldReturnCreatedAuthor() {
         // Arrange
         AuthorRequest request = new AuthorRequest("New Author", LocalDate.parse("1990-01-01"), "Japan");
-        Author savedAuthor = new Author(1L, "New Author", LocalDate.parse("1990-01-01"), "Japan");
+        Author savedAuthor = createAuthor(1L, "New Author", LocalDate.parse("1990-01-01"), "Japan");
         when(authorRepository.save(any(Author.class))).thenReturn(savedAuthor);
 
         // Act
@@ -124,8 +124,8 @@ class AuthorServiceTest {
         // Arrange
         Long id = 1L;
         AuthorRequest request = new AuthorRequest("Updated Author", LocalDate.parse("1990-01-01"), "USA");
-        Author existingAuthor = new Author(id, "Old Author", LocalDate.parse("1980-01-01"), "Japan");
-        Author updatedAuthor = new Author(id, "Updated Author", LocalDate.parse("1990-01-01"), "USA");
+        Author existingAuthor = createAuthor(id, "Old Author", LocalDate.parse("1980-01-01"), "Japan");
+        Author updatedAuthor = createAuthor(id, "Updated Author", LocalDate.parse("1990-01-01"), "USA");
 
         when(authorRepository.findById(id)).thenReturn(Optional.of(existingAuthor));
         when(authorRepository.save(any(Author.class))).thenReturn(updatedAuthor);
@@ -173,7 +173,7 @@ class AuthorServiceTest {
     void get_ShouldReturnAuthor_WhenExists() {
         // Arrange
         Long id = 1L;
-        Author author = new Author(id, "Test Author", LocalDate.now(), "Japan");
+        Author author = createAuthor(id, "Test Author", LocalDate.now(), "Japan");
         when(authorRepository.findById(id)).thenReturn(Optional.of(author));
 
         // Act
@@ -197,5 +197,11 @@ class AuthorServiceTest {
             authorService.get(id);
         });
         verify(authorRepository, times(1)).findById(id);
+    }
+
+    private Author createAuthor(Long id, String name, LocalDate birthDate, String nationality) {
+        Author author = new Author(name, birthDate, nationality);
+        author.setId(id);
+        return author;
     }
 }

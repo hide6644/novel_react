@@ -72,8 +72,8 @@ class NovelServiceTest {
         // Arrange
         Long authorId = 1L;
         NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now(), 1);
-        Author author = new Author(authorId, "Author", LocalDate.now(), "Country");
-        Novel savedNovel = new Novel(1L, "Title", "Description", LocalDate.now(), author);
+        Author author = createAuthor(authorId, "Author", LocalDate.now(), "Country");
+        Novel savedNovel = createNovel(1L, "Title", "Description", LocalDate.now(), author);
 
         when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
         when(novelRepository.save(any(Novel.class))).thenReturn(savedNovel);
@@ -113,10 +113,10 @@ class NovelServiceTest {
         Long authorId = 1L;
         NovelRequest request = new NovelRequest("Updated Title", "Updated Description", authorId, LocalDate.now(), 1);
 
-        Author author = new Author(authorId, "Author", LocalDate.now(), "Country");
-        Novel existingNovel = new Novel(novelId, "Old Title", "Old Description", LocalDate.now(), author);
+        Author author = createAuthor(authorId, "Author", LocalDate.now(), "Country");
+        Novel existingNovel = createNovel(novelId, "Old Title", "Old Description", LocalDate.now(), author);
         existingNovel.setVersion(1);
-        Novel updatedNovel = new Novel(novelId, "Updated Title", "Updated Description", LocalDate.now(), author);
+        Novel updatedNovel = createNovel(novelId, "Updated Title", "Updated Description", LocalDate.now(), author);
         updatedNovel.setVersion(2);
 
         when(novelRepository.findById(novelId)).thenReturn(Optional.of(existingNovel));
@@ -157,8 +157,8 @@ class NovelServiceTest {
         Long novelId = 1L;
         Long authorId = 99L;
         NovelRequest request = new NovelRequest("Title", "Description", authorId, LocalDate.now(), 1);
-        Author existingAuthor = new Author(1L, "Author", LocalDate.now(), "Country");
-        Novel existingNovel = new Novel(novelId, "Title", "Description", LocalDate.now(), existingAuthor);
+        Author existingAuthor = createAuthor(1L, "Author", LocalDate.now(), "Country");
+        Novel existingNovel = createNovel(novelId, "Title", "Description", LocalDate.now(), existingAuthor);
 
         when(novelRepository.findById(novelId)).thenReturn(Optional.of(existingNovel));
         when(authorRepository.findById(authorId)).thenReturn(Optional.empty());
@@ -189,8 +189,8 @@ class NovelServiceTest {
     void get_ShouldReturnNovel_WhenExists() {
         // Arrange
         Long novelId = 1L;
-        Author author = new Author(1L, "Author", LocalDate.now(), "Country");
-        Novel novel = new Novel(novelId, "Title", "Description", LocalDate.now(), author);
+        Author author = createAuthor(1L, "Author", LocalDate.now(), "Country");
+        Novel novel = createNovel(novelId, "Title", "Description", LocalDate.now(), author);
 
         when(novelRepository.findById(novelId)).thenReturn(Optional.of(novel));
 
@@ -215,5 +215,17 @@ class NovelServiceTest {
             novelService.get(novelId);
         });
         verify(novelRepository, times(1)).findById(novelId);
+    }
+
+    private Author createAuthor(Long id, String name, LocalDate birthDate, String nationality) {
+        Author author = new Author(name, birthDate, nationality);
+        author.setId(id);
+        return author;
+    }
+
+    private Novel createNovel(Long id, String title, String description, LocalDate publishDate, Author author) {
+        Novel novel = new Novel(title, description, publishDate, author);
+        novel.setId(id);
+        return novel;
     }
 }
