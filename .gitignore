@@ -47,3 +47,6 @@ coverage/
 .project
 .settings/
 bin/
+
+.agent/
+.planning/
