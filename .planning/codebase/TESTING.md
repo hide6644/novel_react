@@ -1,19 +1,48 @@
-# Testing
+# Testing Patterns
 
-## 1. Backend Testing
-- **Framework**: JUnit 5, part of `spring-boot-starter-test`.
-- **Location**: Tests are located in `backend/src/test/java/`.
-- **Capabilities**:
-  - Integration testing with `@SpringBootTest`.
-  - Slice testing with `@WebMvcTest` and `@DataJpaTest`.
-  - Security testing via `spring-security-test`.
-  - Typical use of Mockito (bundled with spring-boot-starter-test) for mocking service layers.
+**Analysis Date:** 2026-04-13
 
-## 2. Frontend Testing
-- **Framework & Config**: Currently, no dedicated test framework (e.g., Vitest, Jest, Cypress) is explicitly configured or present in front-end dependencies (`package.json`).
-- **Coverage**: No explicit frontend test coverage tasks automated in npm scripts.
-- **Mocking**: Not configured. 
+## Test Framework
 
-## 3. Recommendations
-- Implement Vitest and React Testing Library for the frontend.
-- Utilize Playwright or Cypress for end-to-end user-flow validation across the frontend and backend.
+**Backend Runner:**
+- Spring Boot Starter Test (JUnit 5 + MockMvc)
+- Test-specific configuration context
+
+**Frontend Runner:**
+- Vitest 4.1.4 (configured via Vite plugin).
+- `@testing-library/react` (v16) for DOM manipulation and evaluation.
+- `jsdom` (v29) DOM simulated environment for Node.
+
+## Test File Organization
+
+**Backend Location:**
+- Standard Java test path: `/backend/src/test/java/...`
+- Matches typical package structures mirror to `main/java`.
+
+**Frontend Location:**
+- Unit and smoke tests placed alongside source logic (e.g., `App.test.jsx`).
+
+## Testing Execution
+
+**Execution Commands:**
+```bash
+# Frontend
+npm run test           # Vitest execution
+npm run test -- --run  # CI mode execution (one-off)
+
+# Backend
+mvn test               # Execute all JUnit tests
+```
+
+## Common Patterns
+
+**Smoke Testing (Frontend):**
+- Verify fundamental React mounting limits without browser context (testing rendering pipelines).
+
+**Service & Controller Testing (Backend):**
+- Utilize `@MockBean` for isolated logic boundaries.
+- Utilize `@WebMvcTest` for Controller endpoint verifications.
+
+---
+
+*Testing analysis: 2026-04-13*

@@ -1,17 +1,17 @@
-# Concerns
+# Codebase Concerns
 
-## 1. Technical Debt
-- **Frontend Testing**: Currently, there is an absence of formal, automated testing pipelines configured for the React frontend (missing Jest/Vitest setups). Test development will slow down subsequent UI development layers until remedied.
-- **Backend Logging**: General structured logs exist, though correlation IDs across services (MDC) or external tracing tools might need to be verified as the scale increases.
+**Analysis Date:** 2026-04-13
 
-## 2. Fragile Areas & Known Issues
-- Currently, no major unresolved TODOs or logic bugs recorded. 
-- Ensure proper configuration of MariaDB environment parameters via .env since placeholder defaults are referenced in local property structures.
+## Architecture & Code Deficits
 
-## 3. Security
-- Default placeholder credentials or insecure CORS endpoints should be strictly prohibited in production branches. 
-- Validate the explicit behavior of JWT Token lifetimes if `app.security.password-expiration-days` interacts closely with local session lifespans.
+- **Test Infrastructure Deficit (Backend):** While frontend testing infrastructure was explicitly updated in v1.1 via Vite/Vitest, the extent of backend unit test coverage remains an assumption. 
+- **Frontend Test Coverage Low:** Basic Vitest capability has just been integrated (App.test.jsx), but robust DOM interaction tests involving nested hooks (`useCrud`) likely do not exist yet.
+- **Security Vulnerabilities Pending:** The NPM dependencies register minor security warnings (seen via `npm install`). 
+- **Peer Dependency Nuance:** Modern React versions (19.x) paired with established ecosystem libraries (`@testing-library`, `vitejs/plugin-react`) currently necessitate close tracking of latest releases (like plugin-react 6.x) to ensure package managers successfully complete installs without `legacy-peer-deps`.
 
-## 4. Performance
-- Application scales reasonably relying on typical Spring Virtual Threads configurations (Java 25).
-- Ensure frontend leverages Tanstack Query caching optimally.
+## Planned Future Work
+- Incremental CI test suites expansion on Frontend logic arrays.
+
+---
+
+*Concerns analysis: 2026-04-13*

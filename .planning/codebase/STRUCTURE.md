@@ -1,57 +1,64 @@
-# Directory Structure
+# Codebase Structure
 
-## Repository Layout
-```
+**Analysis Date:** 2026-04-13
+
+## Root Directory
+
+The project is structured entirely as a decoupled backend and frontend monorepo-style setup.
+
+```text
 /
-├── .agent/         # AI agent configuration and skills
-├── backend/        # Spring Boot Java application
-├── frontend/       # React SPA application
-├── docker-compose.yml # Infrastructure orchestration
+├── backend/          # Java / Spring Boot API Server
+├── frontend/         # React / Vite Client Application
+├── .planning/        # GSD execution planning and metadata
+└── .agent/           # AI Agent localized skills and templates
 ```
 
-## Backend Structure (`backend/`)
-```
-backend/
-├── pom.xml                 # Maven build configuration
-├── src/main/
-│   ├── java/com/example/novel/
-│   │   ├── aspect/         # Spring AOP aspects
-│   │   ├── config/         # Spring configuration classes
-│   │   ├── controller/     # REST API endpoints
-│   │   ├── dto/            # Data Transfer Objects
-│   │   ├── entity/         # JPA Domain models
-│   │   ├── exception/      # Global error handling
-│   │   ├── mapper/         # Object mapping logic
-│   │   ├── repository/     # JPA Repositories
-│   │   ├── security/       # Spring Security configs
-│   │   ├── service/        # Business logic services
-│   │   └── NovelApplication.java # Application entry point
-│   └── resources/
-│       ├── application.properties # App configuration
-│       └── logback-spring.xml     # Logging configuration
-├── sql/                    # SQL initialization scripts
-└── logs/                   # Generated application logs
-```
+## Backend Structure (`/backend/src/main/java`)
 
-## Frontend Structure (`frontend/`)
-```
-frontend/
-├── package.json            # Node.js dependencies and scripts
-├── vite.config.js          # Vite build configuration
-├── eslint.config.js        # ESLint flat configuration
-├── src/
-│   ├── api/                # Axios client and API request functions
-│   ├── components/         # Reusable UI components
-│   ├── context/            # React context providers
-│   ├── hooks/              # Custom React hooks
-│   ├── locales/            # i18n translation files
-│   ├── pages/              # Route level components
-│   ├── App.jsx             # Main application component & router 
-│   ├── main.jsx            # React root mount point
-│   ├── i18n.js             # i18next configuration
-│   └── theme.js            # MUI Theme configuration
-```
+Follows standard Spring Boot domain-driven or layer-driven packaging.
 
-## Naming Conventions
-- **Java**: `PascalCase` for Classes/Interfaces, `camelCase` for instances and methods. Structure favors package-by-layer (though could evolve to package-by-feature).
-- **React**: `PascalCase` for component files (`App.jsx`), `camelCase` for utility/logic files (`theme.js`, `i18n.js`). Directories are generally camelCase.
+**Key Directories:**
+- `com.example.novel.controller/`: API Routing and Endpoints (`NovelController`, `AuthController`).
+- `com.example.novel.service/`: Transactional business logic (`NovelService`, `UserService`).
+- `com.example.novel.repository/`: Interfaces extending Spring Data JPA (`NovelRepository`).
+- `com.example.novel.entity/`: JPA data models representing MariaDB tables (`Novel`, `User`, `Author`).
+- `com.example.novel.dto/`: Request/Response payload objects (`LoginRequest`, `NovelResponse`).
+- `com.example.novel.security/`: Authentication configuration and filters.
+- `com.example.novel.exception/`: Global and custom exception definitions.
+- `com.example.novel.config/`: Java-centric configuration classes.
+- `com.example.novel.aspect/`: AOP logging and performance monitoring components.
+
+## Frontend Structure (`/frontend/src`)
+
+Follows a feature-separated standard React SPA architecture.
+
+**Key Directories:**
+- `api/`: External service definitions and Axios instances (`axios.js`).
+- `components/`: Generic and domain-specific reusable React views.
+  - `common/`: Highly generic inputs and UI boundaries (`FormTextField`, `SearchBox`).
+- `context/`: React Context providers (`AuthContext.jsx`).
+- `hooks/`: Custom state and data-fetching hooks (`useCrud.js`).
+- `locales/`: Internationalization JSON bundles for `i18next` (`en.json`, `ja.json`).
+- `pages/`: Routable, high-level screen components (`NovelList`, `Profile`, `Login`).
+- `theme.js`: Material-UI application theme setup.
+- `App.jsx` & `main.jsx`: Core routing and rendering bootstrap.
+
+## Core Domain Models
+
+Based on backend persistence entities:
+
+1. **User**: application users, utilizing a `Role` enumeration.
+2. **Author**: creators / writers within the system.
+3. **Novel**: stories associated with users/authors.
+
+## Configuration Files
+
+- `/backend/pom.xml`: Maven dependency configuration and Java build instructions.
+- `/frontend/package.json`: NPM package management and scripts.
+- `/frontend/vite.config.js`: Vite build, plugin, and test runner configurations.
+
+---
+
+*Structure analysis: 2026-04-13*
+*Update when major folders or domain models change*

@@ -1,34 +1,77 @@
 # Technology Stack
 
-## 1. Backend
-- **Language**: Java 25
-- **Framework**: Spring Boot 4.0.3
-- **Core Components**:
-  - Spring Boot Starter Web
-  - Spring Boot Starter Data JPA
-  - Spring Boot Starter Security
-  - Spring Boot Starter Validation
-- **Database**: MariaDB
-- **Tools & Utilities**:
-  - Lombok (v1.18.42)
-  - Maven Compiler Plugin (v3.15.0)
+**Analysis Date:** 2026-04-13
 
-## 2. Frontend
-- **Language**: JavaScript / JSX
-- **Framework**: React 19.2.4
-- **Build Tool**: Vite v7.3.1
-- **UI Library**: MUI v7.3.8 (Material UI)
-- **Styling**: Emotion (@emotion/react, @emotion/styled)
-- **State & Data Fetching**: @tanstack/react-query (v5.90.21)
-- **Form Handling**: react-hook-form (v7.71.2) with Zod (v4.3.6) validation
-- **Routing**: react-router-dom (v7.13.1)
-- **Internationalization**: i18next (v25.8.14) & react-i18next (v16.5.4)
-- **HTTP Client**: Axios (v1.13.6)
+## Languages
 
-## 3. Infrastructure & Deployment
-- Docker (using `docker-compose.yml` to orchestrate services)
-- Node/npm environment for frontend packaging.
+**Primary:**
+- Java 25 - Backend application code
+- JavaScript (ES6+ / JSX) - Frontend application code
 
-## 4. Environment Context
-- Spring Profiles configuring database URL, username, password and CORS via `backend/src/main/resources/application.properties`.
-- Vite environments for frontend builds.
+**Secondary:**
+- HTML/CSS - Web layout (primarily via MUI)
+
+## Runtime
+
+**Environment:**
+- JDK 25 - Backend runtime
+- Node.js (20.x+) - Frontend dev runtime & build, browser for execution
+
+**Package Manager:**
+- Maven 3.x - Backend dependencies (`pom.xml`)
+- npm 10.x - Frontend dependencies (`package.json`, `package-lock.json`)
+
+## Frameworks
+
+**Core:**
+- Spring Boot 4.0.5 - Backend web server, IoC container, Data JPA, Security
+- React 19.2.5 - Frontend UI library
+
+**Testing:**
+- JUnit / Spring Boot Test - Backend unit/integration tests
+- Vitest 4.1.4 - Frontend unit/smoke tests
+- React Testing Library 16.2.0 - Frontend DOM tests
+
+**Build/Dev:**
+- Vite 8.0.8 - Frontend bundling & dev server
+- Maven Compiler Plugin 3.15.0 - Java build
+- ESLint 9.x - Frontend code linting
+
+## Key Dependencies
+
+**Critical:**
+- MariaDB Java Client (`mariadb-java-client`) - Database access
+- Spring Security - Authentication & Authorization
+- `@tanstack/react-query` (v5.99) - Frontend data fetching & state management
+- `react-router-dom` (v7.14) - Frontend routing
+- `react-hook-form` (v7.72) & `zod` (v4.3) - Frontend form validation
+
+**Infrastructure:**
+- `@mui/material` (v9.0) - UI Component Library
+- `axios` (v1.15) - HTTP Client
+
+## Configuration
+
+**Environment:**
+- `application.yml` or `application.properties` (Spring Boot environment config)
+- Vite / `.env` variables (Frontend API base URL settings etc.)
+
+**Build:**
+- `pom.xml` - Maven dependencies and build plugins
+- `vite.config.js` - Vite bundling config
+- `eslint.config.js` (assumed) - ESLint rules
+
+## Platform Requirements
+
+**Development:**
+- Cross-platform (Windows, macOS, Linux) with JDK 25 & Node.js
+- Local MariaDB Server
+
+**Production:**
+- Standard Java Web container or standalone executable JAR
+- Static file hosting for Frontend React build
+
+---
+
+*Stack analysis: 2026-04-13*
+*Update after major dependency changes*

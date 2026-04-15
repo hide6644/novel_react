@@ -1,24 +1,33 @@
-# Conventions
+# Code Conventions
 
-## 1. Code Style
+**Analysis Date:** 2026-04-13
 
-### Backend (Java)
-- **Formatting**: Standard Java conventions. `backend/src/main/java/` follows standard package structures.
-- **Boilerplate**: Uses Lombok (`@Data`, `@Getter`, `@Setter`, `@RequiredArgsConstructor`, etc.) to minimize boilerplate getter/setter/constructor code.
-- **REST APIs**: Standard Spring MVC annotations (`@RestController`, `@RequestMapping`, `@GetMapping`, `@PostMapping`).
-- **Validation**: Uses JPA validation annotations in Entities/DTOs (from `spring-boot-starter-validation`).
+## Formatting
 
-### Frontend (React/JS)
-- **Lints**: Uses ESLint (`eslint.config.js`) configured for React. Rules aggressively handle React Hooks rules and React Refresh.
-- **Components**: Functional components utilizing React Hooks. 
-- **Imports**: Relies on ES Modules.
-- **Forms**: Centralized form validation using `zod` and `react-hook-form`.
-- **Query Management**: `react-query` used for fetching, ensuring predictable state patterns rather than ad-hoc `useEffect` chains.
+**Backend:**
+- Likely standard Java/Spring conventions. Maven compiler configuration is preset.
 
-## 2. Error Handling
-- **Backend**: Uses a global `@ControllerAdvice` in the `exception/` package for mapping exceptions to standard HTTP error responses.
-- **Frontend**: API errors handled mostly transparently via React Query defaults, possibly surface-level bounds handling (boundary components not yet explicitly fully scoped).
+**Frontend:**
+- ESLint (v9) is utilized for code hygiene and styling policies.
+- JSX structural organization uses standard functional components logic.
 
-## 3. Naming Conventions
-- Backend: Standard `Entity`, `DTO`, `Controller`, `Service`, `Repository` class suffixes.
-- Frontend: `PascalCase` for JSX extension components. `camelCase` for utilities.
+## Naming
+
+**Backend:**
+- Classes: PascalCase (`AuthorController`).
+- Methods/Variables: camelCase.
+- Endpoints: Kebab-case URL patterns (implied REST standard).
+
+**Frontend:**
+- React Components: PascalCase filenames (`NovelList.jsx`).
+- Custom Hooks: `use` prefix, camelCase (`useCrud.js`).
+- State variables / standard functions: camelCase.
+
+## Code Organization
+
+- **DTO Encapsulation (Backend):** Requests and responses strictly use suffix `Request` or `Response` (e.g., `LoginRequest`, `NovelResponse`), isolating JSON data from Database Entity properties.
+- **Hook Extraction (Frontend):** Common TanStack Query logic is cleanly factored out into custom reusable hooks instead of embedding API logic within presentation files.
+
+---
+
+*Conventions analysis: 2026-04-13*
